@@ -157,3 +157,49 @@ The following normative documents contain provisions which, through reference in
 * [RFC 2616, Hypertext Transfer Protocol -- HTTP/1.1](https://www.ietf.org/rfc/rfc2616.txt)
 * [RFC 4627, the application/json Media Type for Javascript Object Notation (JSON), July 2006](https://www.ietf.org/rfc/rfc4627.txt)
 * [Unified Code for Units of Measure (UCUM) – Version 1.9, April 2015](http://unitsofmeasure.org/ucum.html)
+
+## 4. Terms and definitions
+
+For the purposes of this document, the following terms and definitions apply:
+
+**Collection**
+
+Sets of Resources, which can be retrieved in whole or in part [RFC5023]
+
+**Entity**
+
+Entities are instances of entity types [OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02]
+
+*Note: Thing, Sensor, Datastream, Observation are some example entity types of the OGC SensorThings API*
+
+**Entity sets**
+
+Entity sets are named collections of entities (e.g. Sensors is an entity set containing Sensor entities). An entity's key uniquely identifies the entity within an entity set. Entity sets provide entry points into an OGC SensorThings API service. [OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02]
+
+**(Internet of) Thing**
+
+A thing is an object of the physical world (physical things) or the information world (virtual things) that is capable of being identified and integrated into communication networks. [ITU-T Y.2060]
+
+**Measurement**
+
+A set of operations having the object of determining the value of a quantity [OGC and ISO 19156:2011]
+
+**Observation**
+
+Act of measuring or otherwise determining the value of a property [OGC and ISO 19156:2011]
+
+**Observation Result**
+
+Estimate of the value of a property determined through a known observation procedure [OGC and ISO 19156:2011]
+
+**Resources**
+
+A network-accessible data object or service identified by an IRI, as defined in [RFC 2616]
+
+**REST**
+
+The Representational State Transfer (REST) style is an abstraction of the architectural elements within a distributed hypermedia system. REST focuses on the roles of components, the constraints upon their interaction with other components, and their interpretation of significant data elements. It encompasses the fundamental constraints upon components, connectors, and data that define the basis of the Web architecture, and thus the essence of its behavior as a network-based application. An API that has REST architecture is called a RESTful API
+
+**Sensor**
+
+An entity capable of observing a phenomenon and returning an observed value. Type of observation procedure that provides the estimated value of an observed property at its output. [OGC 12-000]
