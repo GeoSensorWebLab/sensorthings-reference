@@ -220,3 +220,39 @@ Requirements are presented using the following style:
 The text at the bottom of the box `<requirement id>` is the path and it provides the URI of the requirement, which can be used to unambiguously identify the requirement.
 
 Normative verbs like SHALL are written in capitals.
+
+## 6. Symbols (and abbreviated terms)
+
+**API**: Application Programming Interface
+
+**CS-W**: Catalog Service Web
+
+**CRUD**: Create, Read, Update, and Delete
+
+**GML**: Geography Markup Language
+
+**HTML**: HyperText Markup Language
+
+**HTTP**: Hypertext Transfer Protocol
+
+**IoT**: Internet of Things
+
+**ISO**: International Organization for Standardization JSON JavaScript Object Notation
+
+**OData**: the Open Data Protocol
+
+**OGC**: Open Geospatial Consortium OWS OGC Web Services
+
+**O&M**: Observations and Measurements REST REpresentational State Transfer SensorML Sensor Model Language
+
+**SOS**: Sensor Observation Service
+
+**SPS**: Sensor Planning Service
+
+**SWE**: Sensor Web Enablement
+
+**UCUM**: Unified Code for Units of Measure UML Unified Modeling Language
+
+**WoT**: Web of Things
+
+**XML**: eXtensible Markup Language
