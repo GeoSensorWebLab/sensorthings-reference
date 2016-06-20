@@ -142,3 +142,18 @@ NOTE: The smaller blue text in the following tables is the path fragment that ap
     </tr>
   </tbody>
 </table>
+
+## 3. Normative References
+
+The following normative documents contain provisions which, through reference in this text, constitute provisions of this document. For dated references, subsequent amendments to, or revisions of, any of these publications do not apply. For undated references, the latest edition of the normative document referred to applies.
+
+* [ISO 8601:1988(E), Data elements and interchange formats – Information interchange - Representation of dates and times.](http://www.iso.org/iso/catalogue_detail.htm?csnumber=15903)
+* [OGC and ISO 19156:2011(E), OGC Abstract Specification: Geographic information — Observations and Measurements](http://www.iso.org/iso/catalogue_detail.htm?csnumber=32574)
+* [OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html)
+* [OASIS OData Version 4.0 Part 2: URL Conventions Plus Errata 02](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html)
+* [OASIS OData JSON Format Version 4.0 Plus Errata 02](http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html)
+* [OASIS OData ABNF Construction Rules Errata 02](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/abnf/odata-abnf-construction-rules.txt)
+* [RFC 2046, Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types](https://www.ietf.org/rfc/rfc2046.txt)
+* [RFC 2616, Hypertext Transfer Protocol -- HTTP/1.1](https://www.ietf.org/rfc/rfc2616.txt)
+* [RFC 4627, the application/json Media Type for Javascript Object Notation (JSON), July 2006](https://www.ietf.org/rfc/rfc4627.txt)
+* [Unified Code for Units of Measure (UCUM) – Version 1.9, April 2015](http://unitsofmeasure.org/ucum.html)
