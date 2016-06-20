@@ -267,4 +267,6 @@ Organizations that need a web-based platforms to manage, store, share, analyze I
 
 In today’s world, most IoT devices (e.g., sensors and actuators) have proprietary software interfaces defined by their manufacturers and used selectively. New APIs are often required and developed on an as needed basis, often in an environment with resource limitations and associated risks. This situation requires significant investment on the part of developers for each new sensor or project involving multiple systems and on the part of the providers of sensors, gateways and portals or services where observations and measurements are required.
 
-As a standardized data model and interface for sensors in the WoT and IoT1, the OGC SensorThings API offers the following benefits: (1) it permits the proliferation of new high value services with lower overhead of development and wider reach, (2) it lowers the risks, time and cost across a full IoT product cycle, and (3) it simplifies both devices-to-devices and devices-to-applications.
+As a standardized data model and interface for sensors in the WoT and IoT<sup id="a1">[1](#f1)</sup>, the OGC SensorThings API offers the following benefits: (1) it permits the proliferation of new high value services with lower overhead of development and wider reach, (2) it lowers the risks, time and cost across a full IoT product cycle, and (3) it simplifies both devices-to-devices and devices-to-applications.
+
+<strong id="f1">1</strong>: The two terms of IoT and WoT are frequently used interchangeably. [↩](#a1)
