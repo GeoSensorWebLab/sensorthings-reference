@@ -270,3 +270,65 @@ In today’s world, most IoT devices (e.g., sensors and actuators) have propriet
 As a standardized data model and interface for sensors in the WoT and IoT<sup id="a1">[1](#f1)</sup>, the OGC SensorThings API offers the following benefits: (1) it permits the proliferation of new high value services with lower overhead of development and wider reach, (2) it lowers the risks, time and cost across a full IoT product cycle, and (3) it simplifies both devices-to-devices and devices-to-applications.
 
 <strong id="f1">1</strong>: The two terms of IoT and WoT are frequently used interchangeably. [↩](#a1)
+
+## 8. The SensorThings API Sensing Profile Entities
+
+### 8.1 Overview
+
+The OGC SensorThings API data model consists of two parts: (1) the Sensing profile and (2) the Tasking profile. The Sensing profile allows IoT devices and applications to CREATE, READ, UPDATE, and DELETE (i.e., HTTP `POST`, `GET`, `PATCH`, and `DELETE`) IoT data and metadata in a SensorThings service.
+
+Managing and retrieving observations and metadata from IoT sensor systems is one of the most common use cases. As a result, the Sensing profile is designed based on the ISO/OGC Observation and Measurement (O&M) model [OGC and ISO 19156:2011].
+
+The key to the model is that an `Observation` is modeled as an act that produces a result whose value is an estimate of a property of the observation target or `FeatureOfInterest`. An `Observation` instance is classified by its event time (e.g., `resultTime` and `phenonmenonTime`), `FeatureOfInterest`, `ObservedProperty`, and the procedure used (often a `Sensor`).
+
+Moreover, Things are also modeled in the SensorThings API. Further the geographical `Locations` of `Things` are useful in almost every application and as a result are included as well.
+
+In the Sensing profile, a `Thing` has `Locations` and `HistoricalLocations`. A `Thing` also can have multiple `Datastreams`. A `Datastream` is a collection of `Observations` grouped by the same `ObservedProperty` and `Sensor`. An `Observation` is an event performed by a `Sensor` that produces a result whose value is an estimate of an `ObservedProperty` of the `FeatureOfInterest`.
+
+### 8.2 Common Control Information
+
+    Req 1   Each entity SHALL have the following common control information listed in Table 8-1.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/common-control-information
+
+**In SensorThings control information is represented as annotations whose names start with `iot` followed by a dot (.). Annotations are name/value pairs that have a dot (.) as part of the name.**
+
+When annotating a name/value pair for which the value is represented as a JSON object, each annotation is placed within the object and represented as a single name/value pair. In SensorThings the name always starts with the "at" sign (`@`), followed by the namespace `iot`, followed by a dot (.), followed by the name of the term (e.g., "`@iot.id`":`1`).
+
+When annotating a name/value pair for which the value is represented as a JSON array or primitive value, each annotation that applies to this name/value pair is placed next to the annotated name/value pair and represented as a single name/value pair. The name is the same as the name of the name/value pair being annotated, followed by the “at” sign (`@`), followed by the namespace `iot`, followed by a dot (.), followed by the name of the term. (e.g., "`Locations@iot.navigationLink`":"`http://example.org/v.1.0/Things(1)/Locations`")
+
+[Adapted from OData 4.0-JSON-Format section 18]
+
+#### Table 8-1 Common control information
+
+<table>
+  <thead>
+    <tr>
+      <th>Annotation</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td><code>id</code> is the system-generated identifier of an entity. <code>id</code> is unique among the entities of the same entity type in a SensorThings service.</td>
+      <td>Any</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>selfLink</code></td>
+      <td><code>selfLink</code> is the absolute URL of an entity that is unique among all other entities.</td>
+      <td>URL</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>navigationLink</code></td>
+      <td><code>navigationLink</code> is the relative URL that retrieves content of related entities.</td>
+      <td>Relative URL</td>
+      <td>One-to-many (mandatory)</td>
+    </tr>
+  </tbody>
+</table>
