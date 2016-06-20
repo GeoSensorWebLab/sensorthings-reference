@@ -203,3 +203,20 @@ The Representational State Transfer (REST) style is an abstraction of the archit
 **Sensor**
 
 An entity capable of observing a phenomenon and returning an observed value. Type of observation procedure that provides the estimated value of an observed property at its output. [OGC 12-000]
+
+## 5. Conventions
+
+### 5.1 Presentation of Requirements and Recommendations
+
+Requirements are presented using the following style:
+
+    Req <number>    <requirement text>
+    <requirement id>
+
+`<number>` is a unique number within the document.
+
+`<requirement text>` is the requirement itself. Normative verbs like SHALL are written in capitals.
+
+The text at the bottom of the box `<requirement id>` is the path and it provides the URI of the requirement, which can be used to unambiguously identify the requirement.
+
+Normative verbs like SHALL are written in capitals.
