@@ -427,7 +427,7 @@ The OGC SensorThings API follows the ITU-T definition, *i.e.*, with regard to th
   </tbody>
 </table>
 
-**Example 1 an example of a Thing entity:**
+#### Example 1 an example of a `Thing` entity:
 
 
 ```json
@@ -528,7 +528,7 @@ However, the ultimate location of interest of a `Thing` is not always the locati
   </tbody>
 </table>
 
-**Example 2 an example of a Location entity:**
+#### Example 2 an example of a `Location` entity:
 
 ```json
 {
@@ -634,7 +634,7 @@ The `HistoricalLocation` can also be created, updated and deleted. One use case 
   </tbody>
 </table>
 
-**Example 3 An example of a `HistoricalLocations` entity set (e.g., `Things(1)/HistoricalLocations`):**
+#### Example 3 An example of a `HistoricalLocations` entity set (e.g., `Things(1)/HistoricalLocations`):
 
 ```json
 {
@@ -801,7 +801,7 @@ same `ObservedProperty` and are produced by the same `Sensor`.
   </tbody>
 </table>
 
-**Example 4 A `Datastream` entity example:**
+#### Example 4 A `Datastream` entity example:
 
 ```json
 {
@@ -1008,7 +1008,7 @@ value of the property<sup id="a2">[2](#f2)</sup>.
   </tbody>
 </table>
 
-**Example 5 An example of a `Sensor` entity:**
+#### Example 5 An example of a `Sensor` entity:
 
 ```json
 {
@@ -1097,7 +1097,7 @@ An `ObservedProperty` specifies the phenomenon of an `Observation`.
   </tbody>
 </table>
 
-**Example 6 an example `ObservedProperty` entity:**
+#### Example 6 an example `ObservedProperty` entity:
 
 ```json
 {
