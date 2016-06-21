@@ -657,3 +657,240 @@ The `HistoricalLocation` can also be created, updated and deleted. One use case 
   "@iot.nextLink": "http://example.org/v1.0/Things(1)/HistoricalLocations?$skip=2&$top=2"
 }
 ```
+
+### 8.3.4 `Datastream`
+
+A `Datastream` groups a collection of `Observations` and the `Observations` in a `Datastream` measure the
+same `ObservedProperty` and are produced by the same `Sensor`.
+
+    Req 9     Each Datastream entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-9.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/datastream-properties
+
+    Req 10    Each Datastream entity SHALL have the direct relation between a Datastream entity and other entity types listed in Table 8-10.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/datastream-relations
+
+#### Table 8-7 Properties of a `Datastream` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>description</code></td>
+      <td>
+        The description of the <code>Datastream</code> entity.
+      </td>
+      <td>Character String</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>unitOfMeasurement</code></td>
+      <td>
+        <p>
+          A JSON Object containing three key-value pairs. The name property presents the full name of the <code>unitOfMeasurement</code>; the <code>symbol</code> property shows the textual form of the unit symbol; and the <code>definition</code> contains the IRI defining the <code>unitOfMeasurement</code>.
+        </p>
+        <p>
+          The values of these properties SHOULD follow the Unified Code for Unit of Measure (UCUM).
+        </p>
+      </td>
+      <td>JSON Object</td>
+      <td>
+        <p>One (mandatory)</p>
+        <p>
+          Note: When a <code>Datastream</code> does not have a unit of measurement (e.g., a <code>OM_TruthObservation</code> type), the corresponding <code>unitOfMeasurement</code> properties SHALL have <code>null</code> values.
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>observationType</code></td>
+      <td>
+        The type of <code>Observation</code> (with unique result type), which is used by the service to encode observations.
+      </td>
+      <td>ValueCode<br>
+      see Table 8-10.</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>observedArea</code></td>
+      <td>
+        The spatial bounding box of the spatial extent of all <code>FeaturesOfInterest</code> that belong to the <code>Observations</code> associated with this <code>Datastream</code>.
+      </td>
+      <td>GM_Envelope (GeoJSON Polygon)</td>
+      <td>Zero-to-one</td>
+    </tr>
+
+    <tr>
+      <td><code>phenomenonTime</code></td>
+      <td>
+        The temporal bounding box of the phenomenon times of all observations belonging to this <code>Datastream</code>.
+      </td>
+      <td>TM_Period (ISO 8601 Time Interval)</td>
+      <td>Zero-to-one</td>
+    </tr>
+
+    <tr>
+      <td><code>resultTime</code></td>
+      <td>
+        The temporal bounding box of the result times of all observations belonging to this <code>Datastream</code>.
+      </td>
+      <td>TM_Period (ISO 8601 Time Interval)</td>
+      <td>Zero-to-one</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 8-10 Direct relation between a `Datastream` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Thing</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>
+        <p>
+          A <code>Thing</code> has zero-to-many <code>Datastreams</code>. A <code>Datastream</code> entity SHALL only link to a <code>Thing</code> as a collection of <code>Observations</code>.
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>Sensor</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>
+        <p>
+          The <code>Observations</code> in a <code>Datastream</code> are performed by one-and-only-one <code>Sensor</code>. One <code>Sensor</code> MAY produce zero-to-many <code>Observations</code> in different <code>Datastreams</code>.
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>ObservedProperty</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>
+        <p>
+          The <code>Observations</code> of a <code>Datastream</code> SHALL observe the same <code>ObservedProperty</code>. The <code>Observations</code> of different <code>Datastreams</code> MAY observe the same <code>ObservedProperty</code>.
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>Observation</code></td>
+      <td>One mandatory to many optional</td>
+      <td>
+        <p>
+          A <code>Datastream</code> has zero-to-many <code>Observations</code>. One <code>Observation</code> SHALL occur in one-and-only-one <code>Datastream</code>.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+**Example 4 A `Datastream` entity example:**
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/Datastreams(1)",
+  "Thing@iot.navigationLink": "HistoricalLocations(1)/Thing",
+  "Sensor@iot.navigationLink": "Datastreams(1)/Sensor",
+  "ObservedProperty@iot.navigationLink": "Datastreams(1)/ObservedProperty",
+  "Observations@iot.navigationLink": "Datastreams(1)/Observations",
+  "description": "This is a datastream measuring the temperature in an oven.",
+  "unitOfMeasurement": {
+    "name": "degree Celsius",
+    "symbol": "°C",
+    "definition": "http://unitsofmeasure.org/ucum.html#para-30"
+  },
+  "observationType": "http://www.opengis.net/def/observationType/OGC- OM/2.0/OM_Measurement",
+  "observedArea": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          100,
+          0
+        ],
+        [
+          101,
+          0
+        ],
+        [
+          101,
+          1
+        ],
+        [
+          100,
+          1
+        ],
+        [
+          100,
+          0
+        ]
+      ]
+    ]
+  },
+  "phenomenonTime": "2014-03-01T13:00:00Z/2015-05-11T15:30:00Z",
+  "resultTime": "2014-03-01T13:00:00Z/2015-05-11T15:30:00Z"
+}
+```
+
+The `observationType` defines the result types for specialized observations [OGC and ISO 19156:2011 Table 3]. The following table shows some of the `valueCodes` that maps the UML classes in O&M v2.0 [OGC and ISO 19156:2011] to `observationType` names and `observation` result types.
+
+#### Table 8-11 List of some code values used for identifying types defined in the O&M conceptual model (OGC and ISO 19156:2011)
+
+<table>
+  <thead>
+    <tr>
+      <th>O&amp;M 2.0</th>
+      <th>Value Code Value (<code>observationType</code> names)</th>
+      <th>Content of <code>result</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>OM_CategoryObservation</td>
+      <td><code>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation</code></td>
+      <td>IRI</td>
+    </tr>
+
+    <tr>
+      <td>OM_CountObservation</td>
+      <td><code>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CountObservation</code></td>
+      <td>integer</td>
+    </tr>
+
+    <tr>
+      <td>OM_Measurement</td>
+      <td><code>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement</code></td>
+      <td>double</td>
+    </tr>
+
+    <tr>
+      <td>OM_Observation</td>
+      <td><code>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Observation</code></td>
+      <td>Any</td>
+    </tr>
+
+    <tr>
+      <td>OM_TruthObservation</td>
+      <td><code>http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_TruthObservation</code></td>
+      <td>boolean</td>
+    </tr>
+  </tbody>
+</table>
