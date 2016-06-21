@@ -1109,3 +1109,149 @@ An `ObservedProperty` specifies the phenomenon of an `Observation`.
   "definition": "http://dbpedia.org/page/Dew_point"
 }
 ```
+
+### 8.3.7 `Observation`
+
+An `Observation` is act of measuring or otherwise determining the value of a property [OGC and ISO
+19156:2011]
+
+    Req 12    Each Observation entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-17.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/observation-properties
+
+    Req 13    Each Observation entity SHALL have the direct relation between an Observation entity and other entity types listed in Table 8-18.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/observation-relations
+
+#### Table 8-17 Properties of an `Observation` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>phenomenonTime</code></td>
+      <td>
+        <p>
+          The time instant or period of when the <code>Observation</code> happens.
+        </p>
+        <p>
+          Note: Many resource-constrained sensing devices do not have a clock. As a result, a client may omit <code>phenonmenonTime</code> when <code>POST</code> new <code>Observations</code>, even though <code>phenonmenonTime</code> is a mandatory property. When a SensorThings service receives a <code>POST Observations</code> without <code>phenonmenonTime</code>, the service SHALL assign the current server time to the value of the <code>phenomenonTime</code>.
+        </p>
+      </td>
+      <td>TM_Object (ISO 8601 Time string or Time Interval string (e.g., <code>2010-12-23T10:20:00.00-07:00</code> or <code>2010-12-23T10:20:00.00-07:00/2010-12-23T12:20:00.00-07:00</code>))</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>result</code></td>
+      <td>
+        <p>
+          The estimated value of an <code>ObservedProperty</code> from the <code>Observation</code>.
+        </p>
+      </td>
+      <td>Any (depends on the <code>observationType</code> defined in the associated <code>Datastream</code>)</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>resultTime</code></td>
+      <td>
+        <p>
+          The time of the Observation's result was generated.
+        </p>
+        <p>
+          Note: Many resource-constrained sensing devices do not have a clock. As a result, a client may omit <code>resultTime</code> when <code>POST</code> new <code>Observations</code>, even though <code>resultTime</code> is a mandatory property. When a SensorThings service receives a <code>POST Observations</code> without <code>resultTime</code>, the service SHALL assign a null value to the <code>resultTime</code>.
+        </p>
+      </td>
+      <td>TM_Instant (ISO 8601 Time string)</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>resultQuality</code></td>
+      <td>
+        <p>
+          Describes the quality of the <code>result</code>.
+        </p>
+      </td>
+      <td>DQ_Element</td>
+      <td>Zero-to-many</td>
+    </tr>
+
+    <tr>
+      <td><code>validTime</code></td>
+      <td>
+        <p>
+          The time period during which the <code>result</code> may be used.
+        </p>
+      </td>
+      <td>TM_Period (ISO 8601 Time Interval string)</td>
+      <td>Zero-to-one</td>
+    </tr>
+
+    <tr>
+      <td><code>parameters</code></td>
+      <td>
+        <p>
+          Key-value pairs showing the environmental conditions during measurement.
+        </p>
+      </td>
+      <td>NamedValues in a JSON Array</td>
+      <td>Zero-to-one</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 8-18 Direct relation between an `Observation` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Datastream</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>
+        <p>
+          A <code>Datastream</code> can have zero-to-many <code>Observations</code>. One <code>Observation</code> SHALL occur in one-and-only-one <code>Datastream</code>.
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>FeatureOfInterest</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>
+        <p>
+          An <code>Observation</code> observes on one-and-only-one <code>FeatureOfInterest</code>. One <code>FeatureOfInterest</code> could be observed by zero-to-many <code>Observations</code>.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+#### Example 7 An `Observation` entity example
+
+The following example shows an `Observation` whose `Datastream` has an `ObservationType` of `OM_Measurement`. A `result`’s data type is defined by the `observationType`.
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/Observations(1)",
+  "FeatureOfInterest@iot.navigationLink": "Observations(1)/FeatureOfInterest",
+  "Datastream@iot.navigationLink": "Observations(1)/Datastream",
+  "phenomenonTime": "2014-12-31T11:59:59.00+08:00",
+  "resultTime": "2014-12-31T11:59:59.00+08:00",
+  "result": 70.4
+}
+```
