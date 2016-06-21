@@ -1020,3 +1020,92 @@ value of the property<sup id="a2">[2](#f2)</sup>.
   "metadata": "http://example.org/TMP35_36_37.pdf"
 }
 ```
+
+### 8.3.6 `ObservedProperty`
+
+An `ObservedProperty` specifies the phenomenon of an `Observation`.
+
+    Req 10    Each ObservedProperty entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-15.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/observed-property-properties
+
+    Req 11    Each ObservedProperty entity SHALL have the direct relation between a ObservedProperty entity and other entity types listed in Table 8-16.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/observed-property-relations
+
+#### Table 8-15 Properties of an `ObservedProperty` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>name</code></td>
+      <td>
+        The name of the <code>ObservedProperty</code>.
+      </td>
+      <td>Character String</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>definition</code></td>
+      <td>
+        <p>
+          The IRI of the <code>ObservedProperty</code>. Dereferencing this IRI SHOULD result in a representation of the definition of the <code>ObservedProperty</code>.
+        </p>
+      </td>
+      <td>IRI</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>description</code></td>
+      <td>
+        A description about the <code>ObservedProperty</code>.
+      </td>
+      <td>Character String</td>
+      <td>One (mandatory)</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 8-16 Direct relation between an `ObservedProperty` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Datastream</code></td>
+      <td>One mandatory to many optional</td>
+      <td>
+        <p>
+          The <code>Observations</code> of a <code>Datastream</code> observe the same <code>ObservedProperty</code>. The <code>Observations</code> of different <code>Datastreams</code> MAY observe the same <code>ObservedProperty</code>.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+**Example 6 an example `ObservedProperty` entity:**
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/ObservedProperties(1)",
+  "Datastreams@iot.navigationLink": "ObservedProperties(1)/Datastreams",
+  "description": "The dewpoint temperature is the temperature to which the air mustbe cooled, at constant pressure, for dew to form. As the grass and other objects near the ground cool to the dewpoint, some of the water vapor in the atmosphere condenses into liquid water on the objects.",
+  "name": "DewPoint Temperature",
+  "definition": "http://dbpedia.org/page/Dew_point"
+}
+```
