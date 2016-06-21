@@ -563,3 +563,97 @@ However, the ultimate location of interest of a `Thing` is not always the locati
     </tr>
   </tbody>
 </table>
+
+### 8.3.3 `HistoricalLocation`
+
+A `Thing`’s `HistoricalLocation` entity set provides the current (*i.e.*, last known) and previous locations of the `Thing` with their time.
+
+
+    Req 6     Each HistoricalLocation entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-7.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/historical-location-properties
+
+    Req 7     Each HistoricalLocation entity SHALL have the direct relation between a Location entity and other entity types listed in Table 8-8.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/historical-location-relations
+
+    Req 8     When a Thing has a new Location, a new HistoricalLocation SHALL be created and added to the Thing automatically by the service. The current Location of the Thing SHALL only be added to HistoricalLocation automatically by the service, and SHALL not be created as HistoricalLocation directly by user.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/historical-location-auto-creation
+
+The `HistoricalLocation` can also be created, updated and deleted. One use case is to migrate historical observation data from an existing observation data management system to a SensorThings API system.
+
+#### Table 8-7 Properties of an `HistoricalLocation` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>time</code></td>
+      <td>The time when the <code>Thing</code> is known at the <code>Location</code>.</td>
+      <td>TM_Instant (ISO-8601 Time String)</td>
+      <td>One (mandatory)</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 8-8 Direct relation between an `HistoricalLocation` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Location</code></td>
+      <td>Many optional to many mandatory</td>
+      <td>
+        <p>
+          A <code>Location</code> can have zero-to-many <code>HistoricalLocations</code>. One <code>HistoricalLocation</code> SHALL have one or many <code>Locations</code>.
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>Thing</code></td>
+      <td>Many optional to many mandatory</td>
+      <td>
+        <p>
+          A <code>HistoricalLocation</code> has one-and-only-one <code>Thing</code>. One <code>Thing</code> MAY have zero-to-many <code>HistoricalLocations</code>.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+**Example 3 An example of a `HistoricalLocations` entity set (e.g., `Things(1)/HistoricalLocations`):**
+
+```json
+{
+  "value": [
+    {
+      "@iot.id": 1,
+      "@iot.selfLink": "http://example.org/v1.0/HistoricalLocations(1)",
+      "Locations@iot.navigationLink": "HistoricalLocations(1)/Locations",
+      "Thing@iot.navigationLink": "HistoricalLocations(1)/Thing",
+      "time": "2015-01-25T12:00:00-07:00"
+    },
+    {
+      "@iot.id": 1,
+      "@iot.selfLink": "http://example.org/v1.0/HistoricalLocations(2)",
+      "Locations@iot.navigationLink": "HistoricalLocations(2)/Locations",
+      "Thing@iot.navigationLink": "HistoricalLocations(2)/Thing",
+      "time": "2015-01-25T13:00:00-07:00"
+    }
+  ],
+  "@iot.nextLink": "http://example.org/v1.0/Things(1)/HistoricalLocations?$skip=2&$top=2"
+}
+```
