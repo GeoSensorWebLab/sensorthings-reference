@@ -894,3 +894,129 @@ The `observationType` defines the result types for specialized observations [OGC
     </tr>
   </tbody>
 </table>
+
+### 8.3.5 `Sensor`
+
+A `Sensor` is an instrument that observes a property or phenomenon with the goal of producing an estimate of the
+value of the property<sup id="a2">[2](#f2)</sup>.
+
+    Req 8 Each Sensor entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-12.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/sensor-properties
+
+    Req 9 Each Sensor entity SHALL have the direct relation between a Sensor entity and other entity types listed in Table 8-13.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/sensor-relations
+
+<strong id="f2">2</strong>: In some cases, the `Sensor` in this data model can also be seen as the `Procedure` (method, algorithm, or instrument) defined in [OGC and ISO 19156:2011]. [↩](#a2)
+
+#### Table 8-12 Properties of a `Sensor` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>description</code></td>
+      <td>
+        The description of the <code>Sensor</code> entity.
+      </td>
+      <td>Character String</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>encodingType</code></td>
+      <td>
+        <p>
+          The encoding type of the <code>metadata</code> property. Its value is one of the ValueCode enumeration (see Table 8-14 for the available ValueCode).
+        </p>
+      </td>
+      <td>ValueCode</td>
+      <td>
+        <p>One (mandatory)</p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>metadata</code></td>
+      <td>
+        The detailed description of the <code>Sensor</code> or system. The metadata type is defined by <code>encodingType</code>.
+      </td>
+      <td>ValueCode<br>
+      see Table 8-10.</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>observedArea</code></td>
+      <td>
+        The spatial bounding box of the spatial extent of all <code>FeaturesOfInterest</code> that belong to the <code>Observations</code> associated with this <code>Datastream</code>.
+      </td>
+      <td>Any (depending on the value of the <code>encodingType</code>)</td>
+      <td>One (mandatory)</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 8-13 Direct relation between a `Sensor` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Datastream</code></td>
+      <td>One mandatory to many optional</td>
+      <td>
+        <p>
+          The <code>Observations</code> of a <code>Datastream</code> are measured with the same <code>Sensor</code>. One <code>Sensor</code> MAY produce zero-to-many <code>Observations</code> in different <code>Datastreams</code>.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 8-14 List of some code values used for identifying types for the `encodingType` of the `Sensor` entity
+
+<table>
+  <thead>
+    <tr>
+      <th><code>Sensor encodingType</code></th>
+      <th>Value Code Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>PDF</td>
+      <td><code>application/pdf</code></td>
+    </tr>
+
+    <tr>
+      <td>SensorML</td>
+      <td><code>http://www.opengis.net/doc/IS/SensorML/2.0</code></td>
+    </tr>
+  </tbody>
+</table>
+
+**Example 5 An example of a `Sensor` entity:**
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/Sensors(1)",
+  "Datastreams@iot.navigationLink": "Sensors(1)/Datastreams",
+  "description": "TMP36 - Analog Temperature sensor",
+  "encodingType": "application/pdf",
+  "metadata": "http://example.org/TMP35_36_37.pdf"
+}
+```
