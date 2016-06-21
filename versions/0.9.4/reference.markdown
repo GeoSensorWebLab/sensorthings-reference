@@ -1255,3 +1255,102 @@ The following example shows an `Observation` whose `Datastream` has an `Observat
   "result": 70.4
 }
 ```
+
+### 8.3.8 `FeatureOfInterest`
+
+An `Observation` results in a value being assigned to a phenomenon. The phenomenon is a property of a feature, the latter being the `FeatureOfInterest` of the `Observation` [OGC and ISO 19156:2001]. In the context of the Internet of Things, many `Observations`’ `FeatureOfInterest` can be the `Location` of the `Thing`. For example, the `FeatureOfInterest` of a wifi-connect thermostat can be the `Location` of the thermostat (i.e., the living room where the thermostat is located in). In the case of remote sensing, the `FeatureOfInterest` can be the geographical area or volume that is being sensed.
+
+    Req 14    Each FeatureOfInterest entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-19.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/feature-of-interest-properties
+
+    Req 15    Each FeatureOfInterest entity SHALL have the direct relation between a FeatureOfInterest entity and other entity types listed in Table 8-20.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/feature-of-interest-relations
+
+#### Table 8-19 Properties of a `FeatureOfInterest` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>description</code></td>
+      <td>
+        <p>
+          The description about the <code>FeatureOfInterest</code>.
+        </p>
+      </td>
+      <td>Character String</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>encodingType</code></td>
+      <td>
+        <p>
+          The encoding type of the feature property. Its value is one of the ValueCode enumeration (see Table 8-6 for the available ValueCode).
+        </p>
+      </td>
+      <td>ValueCode</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>feature</code></td>
+      <td>
+        <p>
+          The detailed description of the feature. The data type is defined by <code>encodingType</code>.
+        </p>
+      </td>
+      <td>Any</td>
+      <td>One (mandatory)</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 8-20 Direct relation between a `FeatureOfInterest` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Observation</code></td>
+      <td>One mandatory to many optional</td>
+      <td>
+        <p>
+          An <code>Observation</code> observes on one-and-only-one <code>FeatureOfInterest</code>. One <code>FeatureOfInterest</code> could be observed by zero-to-many <code>Observations</code>.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+#### Example 8 an example of a `FeatureOfInterest` entity
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/FeaturesOfInterest(1)",
+  "Observations@iot.navigationLink": "FeaturesOfInterest(1)/Observations",
+  "description": "This is a weather station.",
+  "encodingType": "application/vnd.geo+json",
+  "feature": {
+    "type": "Point",
+    "coordinates": [
+      -114.06,
+      51.05
+    ]
+  }
+}
+```
