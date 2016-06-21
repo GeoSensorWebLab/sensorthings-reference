@@ -332,3 +332,234 @@ When annotating a name/value pair for which the value is represented as a JSON a
     </tr>
   </tbody>
 </table>
+
+### 8.3 The Sensing Profile Core Entities
+
+The SensorThings API Sensing Profile Core Entities are depicted in Figure 1.
+
+![Sensing Profile Core Entities](images/figure-1-core-entities.png)
+
+**Figure 1 Sensing Profile Core Entities**
+
+In this section, we explain the properties in each entity type and the direct relation to the other entity types. In addition, for each entity type, we show an example of the associated JSON encoding.
+
+### 8.3.1 `Thing`
+
+The OGC SensorThings API follows the ITU-T definition, *i.e.*, with regard to the Internet of Things, a thing is an object of the physical world (physical things) or the information world (virtual things) that is capable of being identified and integrated into communication networks [ITU-T Y.2060].
+
+    Req 2   Each Thing entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-2.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/thing-properties
+
+#### Table 8-2 Properties of a `Thing` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>description</code></td>
+      <td>This is a short description of the corresponding <code>Thing</code> entity.</td>
+      <td>Character String</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>properties</code></td>
+      <td>A JSON Object containing user-annotated properties as key-value pairs.</td>
+      <td>JSON Object</td>
+      <td>Zero-to-one</td>
+    </tr>
+  </tbody>
+</table>
+
+    Req 3   Each Thing entity SHALL have the direct relation between a Thing entity and other entity types listed in Table 8-3.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/thing-relations
+
+#### Table 8-3 Direct relation between a `Thing` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Location</code></td>
+      <td>Many optional to many optional</td>
+      <td>
+        <p>
+          The <code>Location</code> entity locates the <code>Thing</code>. Multiple <code>Things</code> MAY be located at the same <code>Location</code>. A <code>Thing</code> MAY not have a <code>Location</code>. A <code>Thing</code> SHOULD have only one <code>Location</code>.
+        </p>
+        <p>
+          However, in some complex use cases, a <code>Thing</code> MAY have more than one <code>Location</code> representations. In such case, the <code>Thing</code> MAY have more than one <code>Locations</code>. These <code>Locations</code> SHALL have different <code>encodingTypes</code> and the <code>encodingTypes</code> SHOULD be in different spaces (e.g., one <code>encodingType</code> in Geometrical space and one <code>encodingType</code> in Topological space).
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>HistoricalLocation</code></td>
+      <td>One mandatory to many optional</td>
+      <td>
+        <p>
+          A <code>Thing</code> has zero-to-many <code>HistoricalLocations</code>. A <code>HistoricalLocation</code> has one-and-only-one <code>Thing</code>
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>Datastream</code></td>
+      <td>One mandatory to many optional</td>
+      <td>
+        <p>
+          A <code>Thing</code> MAY have zero-to-many <code>Datastreams</code>.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+**Example 1 an example of a Thing entity:**
+
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/Things(1)",
+  "Locations@iot.navigationLink": "Things(1)/Locations",
+  "Datastreams@iot.navigationLink": "Things(1)/Datastreams",
+  "HistoricalLocations@iot.navigationLink": "Things(1)/HistoricalLocations",
+  "description": "This thing is an oven.",
+  "properties": {
+    "owner": "John Doe",
+    "color": "Silver"
+  }
+}
+```
+
+### 8.3.2 `Location`
+
+The `Location` entity locates the `Thing` or the `Things` it associated with. A Thing’s `Location` entity is
+defined as the last known location of the `Thing`.
+
+A `Thing`’s `Location` may be identical to the `Thing`’s `Observations’` `FeatureOfInterest`. In the context of the IoT, the principle location of interest is usually associated with the location of the `Thing`, especially for in-situ sensing applications. For example, the location of interest of a wifi-connected thermostat should be the building or the room in which the smart thermostat is located. And the `FeatureOfInterest` of the `Observations` made by the thermostat (e.g., room temperature readings) should also be the building or the room. In this case, the content of the smart thermostat’s location should be the same as the content of the temperature readings’ feature of interest.
+
+However, the ultimate location of interest of a `Thing` is not always the location of the `Thing` (e.g., in the case of remote sensing). In those use cases, the content of a `Thing`’s `Location` is different from the content of the `FeatureOfInterest` of the `Thing`’s `Observations`. Section 7.1.4 of [OGC and ISO 19156:2011] provides a detailed explanation of observation location.
+
+    Req 4    Each Location entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-4.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/location-properties
+
+#### Table 8-4 Properties of a `Location` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data Type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>description</code></td>
+      <td>The description about the <code>Location</code>.</td>
+      <td>Character String</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>encodingType</code></td>
+      <td>The encoding type of the <code>location</code> property. Its value is one of the ValueCode enumeration (see Table 8-6).</td>
+      <td>ValueCode</td>
+      <td>One (mandatory)</td>
+    </tr>
+
+    <tr>
+      <td><code>location</code></td>
+      <td>The <code>location</code> type is defined by <code>encodingType</code>.</td>
+      <td>Any (<em>i.e.</em>, the type is depending on the value of the <code>encodingType</code>)</td>
+      <td>One (mandatory)</td>
+    </tr>
+  </tbody>
+</table>
+
+    Req 5     Each Location entity SHALL have the direct relation between a Location entity and other entity types listed in Table 8-5.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/location-relations
+
+#### Table 8-5 Direct relation between a `Location` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Thing</code></td>
+      <td>Many optional to many optional</td>
+      <td>
+        <p>
+          Multiple <code>Things</code> MAY locate at the same <code>Location</code>. A <code>Thing</code> MAY not have a <code>Location</code>.
+        </p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><code>HistoricalLocation</code></td>
+      <td>One mandatory to many optional</td>
+      <td>
+        <p>
+          A <code>Location</code> can have zero-to-many <code>HistoricalLocations</code>. One <code>HistoricalLocation</code> SHALL have one or many <code>Locations</code>.
+        </p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+**Example 2 an example of a Location entity:**
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/Locations(1)",
+  "Things@iot.navigationLink": "Locations(1)/Things",
+  "HistoricalLocations@iot.navigationLink": "Locations(1)/HistoricalLocations",
+  "encodingType": "application/vnd.geo+json",
+  "location": {
+    "type": "Point",
+    "coordinates": [
+      -114.06,
+      51.05
+    ]
+  }
+}
+```
+
+#### Table 8-6 List of some code values used for identifying types for the `encodingType` of the `Location` and `FeatureOfInterest` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Location <code>encodingType</code></th>
+      <th>ValueCode Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GeoJSON</td>
+      <td>application/vnd.geo+json</td>
+    </tr>
+  </tbody>
+</table>
