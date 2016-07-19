@@ -1588,3 +1588,78 @@ As users can use navigation properties to link from one entity set to another, u
 turns the resultTime property of the specified `Observation` in the `Datastream`.
 
 **Example Request 3:** `http://example.org/v1.0/Datastreams(1)/Observations(1)/FeatureOfInterest` returns the `FeatureOfInterest` entity of the specified `Observation` in the `Datastream`.
+
+### 9.3 Requesting Data
+
+Clients issue HTTP `GET` requests to OGC SensorThings API services for data.
+
+The resource path of the URL specifies the target of the request. Additional query operators can be specified
+through query options that are presented as follows.
+
+    Req 17    OGC SensorThings API services are hypermedia driven services that return URLs to the client. If a client subsequently requests the advertised resource and the URL has expired, then the service SHOULD respond with 410 Gone. If this is not feasible, the service SHALL respond with 404 Not Found.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/status-code
+
+#### 9.3.1 Evaluating System Query Options
+
+    Req 18    An OGC SensorThings API service SHALL evaluate the system query options following the order specified in Section 9.3.1.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/order
+
+The OGC SensorThings API adapts many of OData’s system query options and their usage. These query options allow refining the request.
+
+The result of the service request is as if the system query options were evaluated in the following order.
+
+Prior to applying any server-driven pagination:
+
+* `$filter`
+* `$count`
+* `$orderby`
+* `$skip`
+* `$top`
+
+After applying any server-driven pagination:
+
+* `$expand`
+* `$select`
+
+#### 9.3.2 Specifying Properties to Return
+
+The `$select` and `$expand` system query options enable the client to specify the set of properties to be included in a response.
+
+##### 9.3.2.1 `$expand`
+
+    Req 19    The usage of the $select query option SHALL be as defined in Section 9.3.2.1.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/expand
+
+The `$expand` system query option indicates the related entities to be represented inline. The value of the `$expand` query option must be a comma separated list of navigation property names. Additionally each navigation property can be followed by a forward slash and another navigation property to enable identifying a multi-level relationship.
+
+#### Example 18: examples of `$expand` query option
+
+**Example 1:** `http://example.org/v1.0/Things?$expand=Datastreams` returns the entity set of `Things` as well as each of the `Datastreams` associated with each `Thing` entity.
+
+**Example 2:** `http://example.org/v1.0/Things?$expand=Datastreams/ObservedProperty` returns the collection of `Things`, the `Datastreams` associated with each `Thing`, and the `ObservedProperty` associated with each `Datastream`.
+
+**Example 3:** `http://example.org/v1.0/Datastreams(1)?$expand=Observations,ObservedProperty` returns the `Datastream` whose `id` is 1 as well as the `Observations` and `ObservedProperty` associated with this `Datastream`.
+
+Query options can be applied to the expanded navigation property by appending a semicolon-separated list of query options, enclosed in parentheses, to the navigation property name. Allowed system query options are `$filter`, `$select`, `$orderby`, `$skip`, `$top`, `$count`, and `$expand`.
+
+[Adapted from OData 4.0- URL 5.1.2]
+
+**Example 4:** `http://example.org/v1.0/Datastreams(1)?$expand=Observations($filter=result eq 1)` returns the `Datastream` whose `id` is 1 as well as its `Observations` with a `result` equal to 1.
+
+##### 9.3.2.2 `$select`
+
+    Req 20    The usage of the $select query option SHALL be as defined in Section 9.3.2.2.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/select
+
+The `$select` system query option requests that the service to return only the properties explicitly requested by the client. The value of a `$select` query option is a comma-separated list of selection clauses. Each selection clause may be a property name (including navigation property names). The service returns the specified content, if available, along with any available expanded navigation properties.
+
+[Adapted from OData 4.0-Protocol 11.2.4.1]
+
+#### Example 19: examples of `$select` query option
+
+**Example 1:** `http://example.org/v1.0/Observations?$select=result,resultTime` returns only the
+`result` and `resultTime` properties for each `Observation` entity.
+
+**Example 2:** `http://example.org/v1.0/Datasteams(1)?$select=id,Observations&$expand=Observations/FeatureOfInterest` returns the `id` property of the `Datastream` entity, and all the properties of the entity identified by the `Observations` and `FeatureOfInterest` navigation properties.
+
+**Example 3:** `http://example.org/v1.0/Datastreams(1)?$expand=Observations($select=result)` returns the `Datastream` whose `id` is 1 as well as the `result` property of the entity identified by the `Observations` navigation property.
