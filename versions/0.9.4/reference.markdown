@@ -1663,3 +1663,241 @@ The `$select` system query option requests that the service to return only the p
 **Example 2:** `http://example.org/v1.0/Datasteams(1)?$select=id,Observations&$expand=Observations/FeatureOfInterest` returns the `id` property of the `Datastream` entity, and all the properties of the entity identified by the `Observations` and `FeatureOfInterest` navigation properties.
 
 **Example 3:** `http://example.org/v1.0/Datastreams(1)?$expand=Observations($select=result)` returns the `Datastream` whose `id` is 1 as well as the `result` property of the entity identified by the `Observations` navigation property.
+
+### 9.4 Query Entity Sets
+
+The OGC SensorThings API services support requests for data via `HTTP GET` requests. Clients can apply query operators to further process the addressed resources. The query operators are prefixed with a dollar (`$`) character and specified as key-value pairs after the question symbol "`?`" in the request URI. Many of the OGC SensorThings API’s query options are adapted from OData’s query options. OData developers should be able to pick up SensorThings API query options very quickly.
+
+    Req 21    If a service does not support a system query option, it SHALL fail any request that contains the unsupported option and SHOULD return 501 Not Implemented.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/query-status-code
+
+#### 9.4.1 `$orderby`
+
+    Req 22    The usage of the $orderby query option SHALL be as defined in Section 9.4.1.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/orderBy
+
+The `$orderby` system query option specifies the order in which items are returned from the service.
+
+The value of the `$orderby` system query option contains a comma-separated list of expressions whose primitive result values are used to sort the items. A special case of such an expression is a property path terminating on a primitive property. A type cast using the qualified entity type name is required to order by a property defined on a derived type.
+
+The expression can include the suffix `asc` for ascending or `desc` for descending, separated from the property name by one or more spaces. If `asc` or `desc` is not specified, the service orders by the specified property in ascending order.
+
+Null values come before non-null values when sorting in ascending order and after non-null values when sorting in descending order.
+
+Items are sorted by the result values of the first expression, and then items with the same value for the first expression are sorted by the result value of the second expression, and so on.
+
+[Note: Adapted from OData 4.0-Protocol 11.2.5.2]
+
+#### Example 20: examples of `$orderby` query option
+
+**Example 1:** `http://example.org/v1.0/Observations?$orderby=result` returns all `Observations`
+ordered by the `result` property in ascending order.
+
+Example 2: `http://example.org/v1.0/Observations?$expand=Datastream&$orderby=Datastreams/id desc, phenomenonTime` returns all `Observations` ordered by the `id` property of the linked `Datastream` entry in descending order, then by the `phenomenonTime` property of `Observations` in ascending order.
+
+#### 9.4.2 `$top`
+
+    Req 23    The usage of the $top query option SHALL be as defined in Section 9.4.2.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/top
+
+The `$top` system query option specifies a non-negative integer n that limits the number of items returned from a collection of entities. The service returns the number of available items up to but not greater than the specified value n.
+
+If no unique ordering is imposed through an `$orderby` query option, the service imposes a stable ordering across requests that include `$top`.
+
+[Note: Adapted from OData 4.0-Protocol 11.2.5.3]
+
+In addition, if the `$top` value exceeds the service-driven pagination limitation (*i.e.*, the largest number of entities the service can return in a single response), the `$top` query option is discarded and the server-side pagination limitation is imposed.
+
+#### Example 21: examples of `$top` query option
+
+**Example 1:** `http://example.org/v1.0/Things?$top=5` returns only the first five entities in the `Things`
+collection.
+
+**Example 2:** `http://example.org/v1.0/Observations?$top=5&$orderby=phenomenonTime desc` returns the first five `Observation` entries after sorted by the `phenomenonTime` property in descending order.
+
+#### 9.4.3 `$skip`
+
+    Req 24    The usage of the $skip query option SHALL be as defined in Section 9.4.3.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/skip
+
+The `$skip` system query option specifies a non-negative integer n that excludes the first n items of the queried collection from the result. The service returns items starting at position n+1.
+
+#### Example 22: examples of `$skip` query option
+
+**Example 1:** `http://example.org/v1.0/Things?$skip=5` returns `Thing` entities starting with the sixth
+`Thing` entity in the `Things` collection.
+
+Where `$top` and `$skip` are used together, `$skip` is applied before `$top`, regardless of the order in which they appear in the request.
+
+If no unique ordering is imposed through an `$orderby` query option, the service imposes a stable ordering
+across requests that include `$skip`.
+
+[Note: Adapted from OData 4.0-Protocol 11.2.5.4]
+
+**Example 2:** `http://example.org/v1.0/Observations?$skip=2&$top=2&$orderby=resultTime` returns the third and fourth `Observation` entities from the collection of all `Observation` entities when the collection is sorted by the `resultTime` property in ascending order.
+
+#### 9.4.4 `$count`
+
+    Req 25    The usage of the $count query option SHALL be as defined in Section 9.4.4.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/count
+
+The `$count` system query option with a value of true specifies that the total count of items within a collection matching the request be returned along with the result.
+
+A `$count` query option with a value of `false` (or not specified) hints that the service does not return a count.
+
+The service returns an HTTP Status code of `400 Bad Request` if a value other than `true` or `false` is
+specified.
+
+The `$count` system query option ignores any `$top`, `$skip`, or `$expand` query options, and returns the total count of results across all pages including only those results matching any specified `$filter`. Clients should be aware that the count returned inline may not exactly equal the actual number of items returned, due to latency between calculating the count and enumerating the last value or due to inexact calculations on the service.
+
+[Adapted from OData 4.0-Protocol 11.2.5.5]
+
+#### Example 23: examples of `$count` query option
+
+**Example 1:** `http://example.org/v1.0/Things?$count=true` return, along with the results, the total
+number of `Things` in the collection.
+
+**Example Response:**
+
+```json
+{
+  "@iot.count": 2,
+  "value": [
+    // Entities omitted for example
+  ]
+}
+```
+
+#### 9.4.5 `$filter`
+
+    Req 26    The usage of the $filter query option SHALL be as defined in Section 9.4.5
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/filter
+
+The `$filter` system query option allows clients to filter a collection of entities that are addressed by a request URL. The expression specified with `$filter` is evaluated for each entity in the collection, and only items where the expression evaluates to true are included in the response. Entities for which the expression evaluates to false or to null, or which reference properties that are unavailable due to permissions, are omitted from the response.
+
+[Adapted from Data 4.0-URL Conventions 5.1.1]
+
+The expression language that is used in `$filter` operators supports references to properties and literals. The literal values can be strings enclosed in single quotes, numbers and boolean values (true or false) or datetime values represented as ISO 8601 time string.
+
+#### Example 24: examples of `$filter` query option
+
+**Example 1:** `http://example.org/v1.0/Observations?$filter=result lt 10.00` returns all
+`Observations` whose `result` is less than 10.00.
+
+In addition, clients can choose to use the properties of linked entities in the `$filter` predicate. The following are examples of the possible uses of the `$filter` in the data model of the SensorThings service.
+
+**Example 2:** `http://example.org/v1.0/Observations?$filter=Datastream/id eq '1'` returns all
+`Observations` whose `Datastream’s` `id` is 1.
+
+**Example 3:** `http://example.org/v1.0/Things?$filter=geo.distance(Locations/location,geography'POINT(-122, 43)') gt 1` returns `Things` that the distance between their last known locations and `POINT(-122 43)` is greater than 1.
+
+**Example 4:** ` http://example.org/v1.0/Things?$expand=Datastreams/Observations/FeatureOfInterest&$filter=Datastreams/Observations/FeatureOfInterest/id eq 'FOI_1' and Datastreams/Observations/resultTime ge 2010-06-01T00:00:00Z and Datastreams/Observations/resultTime le 2010-07-01T00:00:00Z` returns `Things` that have any observations of a feature of interest with a unique identifier equals to '`FOI_1`' in June 2010.
+
+##### 9.4.5.1 Built-in filter operations
+
+The OGC SensorThings API supports a set of built-in filter operations, as described in the following table. These built-in filter operator usages and definitions follow the [OData Specification Section 11.2.5.1.1] and [OData Version 4.0 ABNF].
+
+    Req 27    The built-in filter operators SHALL be as defined in Table 9-1.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/built-in-filter-operations
+
+#### Table 9-1 Built-in Filter Operators
+
+<table>
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="3">Comparison Operators</th>
+    </tr>
+    <tr>
+      <td><code>eq</code></td>
+      <td>Equal</td>
+      <td><code>/ObservedProperties?$filter=unitOfMeasurement/name eq 'degree Celsius'</code></td>
+    </tr>
+    <tr>
+      <td><code>ne</code></td>
+      <td>Not equal</td>
+      <td><code>/ObservedProperties?$filter=unitOfMeasurement/name ne 'degree Celsius'</code></td>
+    </tr>
+    <tr>
+      <td><code>gt</code></td>
+      <td>Greater than</td>
+      <td><code>/Observations?$filter=result gt 20.0</code></td>
+    </tr>
+    <tr>
+      <td><code>ge</code></td>
+      <td>Greater than or equal</td>
+      <td><code>/Observations?$filter=result ge 20.0</code></td>
+    </tr>
+    <tr>
+      <td><code>lt</code></td>
+      <td>Less than</td>
+      <td><code>/Observations?$filter=result lt 100</code></td>
+    </tr>
+    <tr>
+      <td><code>le</code></td>
+      <td>Less than or equal</td>
+      <td><code>/Observations?$filter=result le 100</code></td>
+    </tr>
+    <tr>
+      <th colspan="3">Logical Operators</th>
+    </tr>
+    <tr>
+      <td><code>and</code></td>
+      <td>Logical and</td>
+      <td><code>/Observations?$filter=result le 3.5 and FeatureOfInterest/id eq '1'</code></td>
+    </tr>
+    <tr>
+      <td><code>or</code></td>
+      <td>Logical or</td>
+      <td><code>/Observations?$filter=result gt 20 or result le 3.5</code></td>
+    </tr>
+    <tr>
+      <td><code>not</code></td>
+      <td>Logical negation</td>
+      <td><code>/Things?$filter=not startswith(description,'test')</code></td>
+    </tr>
+    <tr>
+      <th colspan="3">Arithmetic Operators</th>
+    </tr>
+    <tr>
+      <td><code>add</code></td>
+      <td>Addition</td>
+      <td><code>/Observations?$filter=result add 5 gt 10</code></td>
+    </tr>
+    <tr>
+      <td><code>sub</code></td>
+      <td>Subtraction</td>
+      <td><code>/Observations?$filter=result sub 5 gt 10</code></td>
+    </tr>
+    <tr>
+      <td><code>mul</code></td>
+      <td>Multiplication</td>
+      <td><code>/Observations?$filter=result mul 2 gt 2000</code></td>
+    </tr>
+    <tr>
+      <td><code>div</code></td>
+      <td>Division</td>
+      <td><code>/Observations?$filter=result div 2 gt 4</code></td>
+    </tr>
+    <tr>
+      <td><code>mod</code></td>
+      <td>Modulo</td>
+      <td><code>/Observations?$filter=result mod 2 eq 0</code></td>
+    </tr>
+    <tr>
+      <th colspan="3">Grouping Operators</th>
+    </tr>
+    <tr>
+      <td><code>( )</code></td>
+      <td>Precedence grouping</td>
+      <td><code>/Observations?$filter=(result sub 5) gt 10</code></td>
+    </tr>
+  </tbody>
+</table>
+
