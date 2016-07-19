@@ -1354,3 +1354,24 @@ An `Observation` results in a value being assigned to a phenomenon. The phenomen
   }
 }
 ```
+
+## 9. SensorThings Service Interface
+
+An OGC SensorThings API service exposes a service document resources that describe its data model. The service document lists the entity sets that can be CRUD. SensorThings API clients can use the service document to navigate the available entities in a hypermedia-driven fashion.
+
+### 9.1 URI Components
+
+The OGC SensorThings API service groups the same types of entities into *entity sets*. Each entity has a unique identifier and one-to-many properties. Also, in the case of an entity holding a relationship with entities in other entity sets, this type of relationship is expressed with navigation properties (i.e., `navigationLink` and `associationLink`).
+
+Therefore, in order to perform CRUD action on the resources, the first step is to address to the target resource(s) through URI. There are three major URI components used here, namely (1) *the service root URI*, (2) the *resource path*, and (3) the *query options*. In addition, the service root URI consists of two parts: (1) the location of the SensorThings service and (2) the version number. The version number follows the format indicated below:
+
+    "v"majorversionnumber + "." + minorversionnumber
+
+#### Example 9 complete URI example
+
+    http://example.org/v1.0/Observations?$orderby=ID&$top=10
+    _______________________|____________|___________________|
+              |                   |               |
+      service root URI      resource path   query options
+
+By attaching the resource path after the service root URI, clients can address to different types of resources such as an entity set, *an entity*, *a property*, or *a navigation property*. Finally, clients can apply query options after the resource path to further process the addressed resources, such as sorting by properties or filtering with criteria.
