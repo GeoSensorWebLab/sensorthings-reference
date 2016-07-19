@@ -1375,3 +1375,216 @@ Therefore, in order to perform CRUD action on the resources, the first step is t
       service root URI      resource path   query options
 
 By attaching the resource path after the service root URI, clients can address to different types of resources such as an entity set, *an entity*, *a property*, or *a navigation property*. Finally, clients can apply query options after the resource path to further process the addressed resources, such as sorting by properties or filtering with criteria.
+
+### 9.2 Resource Path
+
+The resource path comes right after the service root URI and can be used to address to different resources. The following lists the usages of the resource path.
+
+    Req 16    An OGC SensorThings API service SHALL support all the resource path usages listed in Section 9.2.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/resource-path-to-entities
+
+#### 9.2.1 Usage 1: no resource path
+
+**URI Pattern:** `SERVICE_ROOT_URI`
+
+**Response:** A JSON object with a property named `value`. The value of the property SHALL be a JSON Array containing one element for each entity set of the SensorThings Service.
+
+Each element SHALL be a JSON object with at least two name/value pairs, one with name name containing the name of the entity set (e.g., `Things`, `Locations`, `Datastreams`, `Observations`, `ObservedProperties` and `Sensors`) and one with name `url` containing the URL of the entity set, which may be an absolute or a relative URL.
+
+[Adapted from OData 4.0-JSON-Format section 5]
+
+#### Example 10 a SensorThings request with no resource path
+
+**Example Request:** `http://example.org/v1.0/`
+
+**Example Response:**
+
+```json
+{
+  "value": [
+    {
+      "name": "Things",
+      "url": "http://example.org/v1.0/Things"
+    },
+    {
+      "name": "Locations",
+      "url": " http://example.org/v1.0/Locations"
+    },
+    {
+      "name": "Datastreams",
+      "url": " http://example.org/v1.0/Datastreams"
+    },
+    {
+      "name": "Sensors",
+      "url": " http://example.org/v1.0/Sensors"
+    },
+    {
+      "name": "Observations",
+      "url": " http://example.org/v1.0/Observations"
+    },
+    {
+      "name": "ObservedProperties",
+      "url": " http://example.org/v1.0/ObservedProperties"
+    },
+    {
+      "name": "FeaturesOfInterest",
+      "url": " http://example.org/v1.0/FeaturesOfInterest"
+    }
+  ]
+}
+```
+
+#### 9.2.2 Usage 2: address to a collection of entities
+
+To address to an entity set, users can simply put the entity set name after the service root URI. The service returns a JSON object with a property of value. The value of the property SHALL be a list of the entities in the specified entity set.
+
+**URI Pattern:** `SERVICE_ROOT_URI/ENTITY_SET_NAME`
+
+**Response:** A list of all entities (with all the properties) in the specified entity set when there is no service-driven pagination imposed. The response is represented as a JSON object containing a name/value pair named `value`. The value of the `value` name/value pair is a JSON array where each element is representation of an entity or a representation of an entity reference. An empty collection is represented as an empty JSON array.
+
+The `count` annotation represents the number of entities in the collection. If present, it comes before the `value` name/value pair.
+
+When there is service-driven pagination imposed, the `nextLink` annotation is included in a response that represents a partial result.
+
+[Adapted from OData 4.0-JSON-Format section 12]
+
+#### Example 11 an example to address an entity set
+
+**Example Request:** `http://example.org/v1.0/ObservedProperties`
+
+**Example Response:**
+
+```json
+{
+  "@iot.count": 84,
+  "value": [
+    {
+      "@iot.id": 1,
+      "@iot.selfLink": "http://example.org/v1.0/ObservedProperties(1)",
+      "Datastreams@iot.navigationLink": "ObservedProperties(1)/Datastreams",
+      "description": "The dew point is the temperature at which the water vapor in air at constant barometric pressure condenses into liquid water at the same rate at which it evaporates.",
+      "name": "DewPoint Temperature",
+      "definition": "http://dbpedia.org/page/Dew_point"
+    },
+    {
+      "@iot.id ": 2,
+      "@iot.selfLink": "http://example.org/v1.0/ObservedProperties(2)",
+      "Datastreams@iot.navigationLink": "ObservedProperties(2)/Datastreams",
+      "description": "Relative humidity is the ratio of the partial pressure of water vapor in an air-water mixture to the saturated vapor pressure of water at a prescribed temperature.",
+      "name": "Relative Humidity",
+      "definition": "http://dbpedia.org/page/Relative_humidity"
+    },
+    // Addition entities omitted for example
+  ],
+  "@iot.nextLink": "http://example.org/v1.0/ObservedProperties?$top=5&$skip=5"
+}
+```
+
+#### 9.2.3 Usage 3: address to an entity in a collection
+
+Users can address to a specific entity in an entity set by place the unique identifier of the entity between brace symbol "()" and put after the entity set name. The service then returns the entity with all its properties.
+
+**URI Pattern:** `SERVICE_ROOT_URI/ENTITY_SET_NAME(ID_OF_THE_ENTITY)`
+
+**Response:** A JSON object of the entity (with all its properties) that holds the specified id in the entity set.
+
+#### Example 12: an example request that addresses to an entity in a collection
+
+**Example Request:** `http://example.org/v1.0/ObservedProperties`
+
+#### 9.2.4 Usage 4: address to a property of an entity
+
+Users can address to a property of an entity by specifying the property name after the URI addressing to the entity. The service then returns the value of the specified property. If the property has a complex type value, properties of that value can be addressed by further property name composition.
+
+If the property is single-valued and has the `null` value, the service SHALL respond with `204 No Content`. If the property is not available, for example due to permissions, the service SHALL respond with `404 Not Found`.
+
+[Adapted from OData 4.0-Protocol 11.2.3]
+
+**URI Pattern:** `SERVICE_ROOT_URI/RESOURCE_PATH_TO_AN_ENTITY/PROPERTY_NAME`
+
+**Response:** The specified property of an entity that holds the `id` in the entity set.
+
+#### Example 13: an example to address to a property of an entity
+
+**Example Request:** `http://example.org/v1.0/Observations(1)/resultTime`
+
+**Example Response:**
+
+```json
+{
+  "resultTime": "2010-12-23T10:20:00-07:00"
+}
+```
+
+#### 9.2.5 Usage 5: address to the value of an entity’s property
+
+To address the raw value of a primitive property, clients append a path segment containing the string `$value` to the property URL.
+
+The default format for `TM_Object` types is `text/plain` using the ISO8601 format, such as `2014-03- 01T13:00:00Z/2015-05-11T15:30:00Z` for `TM_Period` and `2014-03-01T13:00:00Z` for `TM_Instant`.
+
+**URI Pattern:** `SERVICE_ROOT_URI/ENTITY_SET_NAME(ID_OF_THE_ENTITY)/PROPERTY_NAME/$value`
+
+**Response:** The raw value of the specified property of an entity that holds the `id` in the entity set.
+
+#### Example 14: an example of addressing to the value of an entity’s property
+
+**Example Request:** `http://example.org/v1.0/Observations(1)/resultTime/$value`
+
+**Example Response:**
+
+    2015-01-12T23:00:13-07:00
+
+#### 9.2.6 Usage 6: address to a navigation property (`navigationLink`)
+
+As the entities in different entity sets may hold some relationships, users can request the linked entities by addressing to a navigation property of an entity. The service then returns one or many entities that hold a certain relationship with the specified entity.
+
+**URI Pattern:** `SERVICE_ROOT_URI/ENTITY_SET_NAME(ID_OF_THE_ENTITY)/LINK_NAME`
+
+**Response:** A JSON object of one entity or a JSON array of many entities that holds a certain relationship with the specified entity.
+
+#### Example 15: an example request addressing to a navigational property
+
+**Example:** `http://example.org/v1.0/Datastreams(1)/Observations` returns all the `Observations` in
+the `Datastream` that holds the `id` 1.
+
+#### 9.2.7 Usage 7: address to an `associationLink`
+
+As the entities in different entity sets may hold some relationships, users can request the linked entities’ `selfLinks` by addressing to an association link of an entity. An `associationLink` can be used to retrieve a reference to an entity or an entity set related to the current entity. Only the `selfLinks` of related entities are returned when resolving `associationLinks`.
+
+**URI Pattern:** `SERVICE_ROOT_URI/ENTITY_SET_NAME(KEY_OF_THE_ENTITY)/LINK_NAME/$ref`
+
+**Response:** A JSON object with a `value` property. The value of the `value` property is a JSON array containing one element for each `associationLink`. Each element is a JSON object with a name/value pairs. The name is `url` and the value is the `selfLinks` of the related entities.
+
+#### Example 16: an example of addressing to an association link
+
+**Example Request:** `http://example.org/v1.0/Datastreams(1)/Observations/$ref` returns all the
+`selfLinks` of the `Observations` of `Datastream(1)`.
+
+**Example Response:**
+
+```json
+{
+  "value": [
+    {
+      "@iot.selfLinks": "http://example.org/v1.0/Observations(1)"
+    },
+    {
+      "@iot.selfLinks": "http://example.org/v1.0/Observations(2)"
+    }
+  ]
+}
+```
+
+#### 9.2.8 Usage 8: nested resource path
+
+As users can use navigation properties to link from one entity set to another, users can further extend the resource path with unique identifiers, properties, or links (*i.e.*, Usage 3, 4 and 6).
+
+#### Example 17: examples of nested resource path
+
+**Example Request 1:** `http://example.org/v1.0/Datastreams(1)/Observations(1)` returns a specific
+`Observation` entity in the `Datastream`.
+
+**Example Request 2:** `http://example.org/v1.0/Datastreams(1)/Observations(1)/resultTime`
+turns the resultTime property of the specified `Observation` in the `Datastream`.
+
+**Example Request 3:** `http://example.org/v1.0/Datastreams(1)/Observations(1)/FeatureOfInterest` returns the `FeatureOfInterest` entity of the specified `Observation` in the `Datastream`.
