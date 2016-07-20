@@ -2670,3 +2670,149 @@ Services MAY implicitly delete or modify related entities if required by integri
     </tr>
   </tbody>
 </table>
+
+## 11. Batch Requests
+
+    Req 37    The batch-processing of the SensorThings service SHALL be as defined in Section 11.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/batch-request
+
+### 11.1 Introduction
+
+The SensorThings service interface provides interfaces for users to perform CRUD actions on resources through different HTTP methods. However, as many IoT devices are resource-constrained, handling a large number of communications may not be practical. This section describes how a SensorThings service can support executing multiple operations sent in a single HTTP request through the use of batch processing. This section covers both how batch operations are represented and processed. SensorThings batch request extension is adapted from [OData 4.0 Protocol 11.7] and all subsections. The only difference is that the `OData-Version` header SHOULD be omitted in SensorThings. Readers are encouraged to read the OData specification section 11.7 before reading the examples below.
+
+### 11.2 Batch-processing request
+
+A batch request is represented as a Multipart MIME v1.0 message [RFC2046], a standard format allowing the representation of multiple parts, each of which may have a different content type, within a single request.
+
+The example below shows a GUID as a boundary and `example.org/v1.0/` for the URI of the service.
+
+Batch requests are submitted as a single `HTTP POST` request to the batch endpoint of a service, located at the
+URL `$batch` relative to the service root (e.g., `example.org/v1.0/$batch`).
+
+Note: In the example, request bodies are excluded in favor of English descriptions inside '<>' brackets to simplify the example.
+
+#### Example 31-1: A Batch Request header example
+
+    POST /v1.0/$batch HTTP/1.1
+    Host: example.org
+    Content-Type: multipart/mixed;boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b
+
+    <BATCH_REQUEST_BODY>
+
+Note: The batch request boundary must be quoted if it contains any of the following special characters:
+
+     ()<>@,;:/"[]?=
+
+#### 11.2.1 Batch request body example
+
+The following example shows a Batch Request that contains the following operations in the order listed
+
+1. A query request
+2. Change Set that contains the following requests:
+    a. Insert entity (with `Content-ID` = 1)
+    b. Update request (with `Content-ID` = 2)
+3. A second query request
+
+Note: For brevity, in the example, request bodies are excluded in favor of English descriptions inside <> brackets.
+
+Note also that the two empty lines after the Host header of the `GET` request are necessary: the first is part of the `GET` request header; the second is the empty body of the `GET` request, followed by a CRLF according to [RFC2046].
+
+[Adapted from OData 4.0 Protocol 11.7.2]
+
+#### Example 31-2: a Batch Request body example
+
+    POST /v1.0/$batch HTTP/1.1
+    Host: host
+    Content-Type: multipart/mixed;boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b
+    Content-Length: ###
+
+    --batch_36522ad7-fc75-4b56-8c71-56071383e77b
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    GET /v1.0/Things(1)
+    Host: host
+
+
+    --batch_36522ad7-fc75-4b56-8c71-56071383e77b
+    Content-Type: multipart/mixed;boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd
+
+    --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd
+    Content-Type: application/http
+
+    Content-Transfer-Encoding: binary
+    Content-ID: 1
+
+    POST /v1.0/Things HTTP/1.1
+    Host: host
+    Content-Type: application/json
+    Content-Length: ###
+
+    <JSON representation of a new Thing>
+    --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 2
+
+    PATCH /v1.0/Things(1) HTTP/1.1
+    Host: host
+    Content-Type: application/json
+    If-Match: xxxxx
+    Content-Length: ###
+
+    <JSON representation of Things(1)>
+    --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd--
+    --batch_36522ad7-fc75-4b56-8c71-56071383e77b
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    GET /v1.0/Things(3) HTTP/1.1
+    Host: host
+
+
+    --batch_36522ad7-fc75-4b56-8c71-56071383e77b--
+
+#### 11.2.2 Referencing new entities in a change set example
+
+#### Example 31-3: A Batch Request that contains the following operations in the order listed:
+
+A change set that contains the following requests:
+
+* Insert a new `Datastream` entity (with `Content-ID` = 1)
+* Insert a second new entity, a `Sensor` entity in this example (reference request with `Content-ID` = 1)
+
+Example:
+
+    POST /v1.0/$batch HTTP/1.1
+    Host: host
+    Content-Type: multipart/mixed;boundary=batch_36522ad7-fc75-4b56-8c71-56071383e77b
+
+    --batch_36522ad7-fc75-4b56-8c71-56071383e77b
+    Content-Type: multipart/mixed;boundary=changeset_77162fcd-b8da-41ac-a9f8-9357efbbd
+
+    --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 1
+
+    POST /v1.0/Datastreams HTTP/1.1
+    Host: host
+    Content-Type: application/json
+    Content-Length: ###
+
+    <JSON representation of a new Datastream>
+
+    --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 2
+
+    POST $1/Sensor HTTP/1.1
+    Host: host
+    Content-Type: application/json
+    Content-Length: ###
+
+    <JSON representation of a new Sensor>
+    --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd--
+    --batch_36522ad7-fc75-4b56-8c71-56071383e77b--
