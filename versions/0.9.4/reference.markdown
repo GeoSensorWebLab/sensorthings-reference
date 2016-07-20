@@ -2816,3 +2816,56 @@ Example:
     <JSON representation of a new Sensor>
     --changeset_77162fcd-b8da-41ac-a9f8-9357efbbd--
     --batch_36522ad7-fc75-4b56-8c71-56071383e77b--
+
+### 11.3 Batch-processing response
+
+#### Example 31-4: referencing the batch request example 31-2 above, assume all the requests except the final query request succeed. In this case the response would be:
+
+    HTTP/1.1 200 Ok
+    Content-Length: ####
+    Content-Type: multipart/mixed;boundary=b_243234_25424_ef_892u748
+
+    --b_243234_25424_ef_892u748
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    HTTP/1.1 200 Ok
+    Content-Type: application/json
+    Content-Length: ###
+
+    <JSON representation of the Thing entity with id = 1>
+    --b_243234_25424_ef_892u748
+    Content-Type: multipart/mixed;boundary=cs_12u7hdkin252452345eknd_383673037
+
+    --cs_12u7hdkin252452345eknd_383673037
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 1
+
+    HTTP/1.1 201 Created
+    Content-Type: application/json
+    Location: http://host/v1.0/Things(99)
+    Content-Length: ###
+
+    <JSON representation of a new Thing entity>
+
+    --cs_12u7hdkin252452345eknd_383673037
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 2
+
+    HTTP/1.1 204 No Content
+    Host: host
+
+
+    --cs_12u7hdkin252452345eknd_383673037--
+    --b_243234_25424_ef_892u748
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
+    Content-Length: ###
+
+    <Error message>
+    --b_243234_25424_ef_892u748--
