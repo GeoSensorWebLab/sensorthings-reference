@@ -2869,3 +2869,72 @@ Example:
 
     <Error message>
     --b_243234_25424_ef_892u748--
+
+### 11.4 Asynchronous batch requests
+
+#### Example 31-5: referencing the example 31-2 above again, assume that when interrogating the monitor URL for the first tim only the first request in the batch finished processing and all the remaining requests except the final query request succeed. In this case the response would be:
+
+    HTTP/1.1 200 Ok
+    Content-Length: ####
+    Content-Type: multipart/mixed;boundary=b_243234_25424_ef_892u748
+
+    --b_243234_25424_ef_892u748
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    HTTP/1.1 200 Ok
+    Content-Type: application/json
+    Content-Length: ###
+
+    <JSON representation of the Thing entity with id = 1>
+    --b_243234_25424_ef_892u748
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    HTTP/1.1 202 Accepted
+    Location: http://service-root/async-monitor
+    Retry-After: ###
+
+
+    --b_243234_25424_ef_892u748--
+
+Client makes a second request using the returned monitor URL:
+
+    HTTP/1.1 200 Ok
+    Content-Length: ####
+    Content-Type: multipart/mixed;boundary=b_243234_25424_ef_892u748
+
+    --b_243234_25424_ef_892u748
+    Content-Type: multipart/mixed;boundary=cs_12u7hdkin252452345eknd_383673037
+
+    --cs_12u7hdkin252452345eknd_383673037
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 1
+
+    HTTP/1.1 201 Created
+    Content-Type: application/json
+    Location: http://host/v1.0/Things(99)
+    Content-Length: ###
+
+    <JSON representation of a new Thing entity>
+    --cs_12u7hdkin252452345eknd_383673037
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+    Content-ID: 2
+
+    HTTP/1.1 204 No Content
+    Host: host
+
+
+    --cs_12u7hdkin252452345eknd_383673037--
+    --b_243234_25424_ef_892u748
+    Content-Type: application/http
+    Content-Transfer-Encoding: binary
+
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
+    Content-Length: ###
+
+    <Error message>
+    --b_243234_25424_ef_892u748—
