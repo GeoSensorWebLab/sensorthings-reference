@@ -2938,3 +2938,268 @@ Client makes a second request using the returned monitor URL:
 
     <Error message>
     --b_243234_25424_ef_892u748—
+
+## 12. SensorThings `MultiDatastream` extension
+
+Observation results may have many data types, including primitive types like category or measure, but also more complex types such as time, location and geometry [OGC and ISO 19156:2008]. SensorThings’ `MultiDatastream` entity is an extension to handle complex observations when the result is an array.
+
+A `MultiDatastream` groups a collection of `Observations` and the `Observations` in a `MultiDatastream` have a complex result type.
+
+The `MultiDatastream` extension entities are depicted in Figure 2.
+
+![MultiDatastream Extension Entities](images/figure-2-multidatastream-extension-entities.png)
+
+**Figure 2 MultiDatastream Extension Entities**
+
+    Req 38    Each MultiDatastream entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 12-1.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/multi-datastream/properties
+
+    Req 39    Each MultiDatastream entity SHALL have the direct relation between a Datastream entity and other entity types listed in Table 12-2.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/multi-datastream/relations
+
+#### Table 12-1 Properties of a `MultiDatastream` entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>description</code></td>
+      <td>The description of the Datastream entity.</td>
+      <td>CharacterString</td>
+      <td>One (mandatory)</td>
+    </tr>
+    <tr>
+      <td><code>unitOfMeasurements</code></td>
+      <td>A JSON array of JSON objects that containing three key-value pairs. The name property presents the full name of the <code>unitOfMeasurement</code>; the <code>symbol</code> property shows the textual form of the unit symbol; and the <code>definition</code> contains the IRI defining the <code>unitOfMeasurement</code>. (see Req 40 for the constraints between <code>unitOfMeasurement</code>, <code>multiObservationDataType</code> and <code>result</code>)</td>
+      <td>A JSON array</td>
+      <td>
+        One (mandatory)<br>
+        Note: It is possible an observation does not have a unit of measurement. For example, a count observation does not have a unit of measurement.
+      </td>
+    </tr>
+    <tr>
+      <td><code>observationType</code></td>
+      <td>The type of <code>Observation</code> (with unique result type), which is used by the service to encode observations.</td>
+      <td>ValueCode and its value SHALL be <code>OM_ComplexObservation</code>.</td>
+      <td>One (mandatory)</td>
+    </tr>
+    <tr>
+      <td><code>multiObservationDataTypes</code></td>
+      <td>This property defines the <code>observationType</code> of each element of the result of a complex <code>Observation</code>.</td>
+      <td>A JSON array of ValueCode. See Table 8-11 for the available ValueCodes.</td>
+      <td>One (mandatory)</td>
+    </tr>
+    <tr>
+      <td><code>observedArea</code></td>
+      <td>The spatial bounding box of the spatial extent of all <code>FeatureOfInterests</code> belong to the Observations associated with this <code>MultiDatastream</code>.</td>
+      <td>GM_Envelope (GeoJSON Polygon)</td>
+      <td>Zero-to-one</td>
+    </tr>
+    <tr>
+      <td><code>phenomenonTime</code></td>
+      <td>The temporal bounding box of the phenomenon times of all observations belonging to this <code>MultiDatastream</code>.</td>
+      <td>TM_Period (ISO 8601 Time Interval)</td>
+      <td>Zero-to-one</td>
+    </tr>
+    <tr>
+      <td><code>resultTime</code></td>
+      <td>The temporal bounding box of the result times of all observations belonging to this <code>MultiDatastream</code>.</td>
+      <td>TM_Period (ISO 8601 Time Interval)</td>
+      <td>Zero-to-one</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 12-2 Direct relation between a `MultiDatastream` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Thing</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>A <code>Thing</code> has zero-to-many <code>MultiDatastream</code>. A <code>MultiDatastream</code> entity SHALL only link to a <code>Thing</code> as a collection of <code>Observations</code>.</td>
+    </tr>
+    <tr>
+      <td><code>Sensor</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>The <code>Observations</code> in a <code>MultiDatastream</code> are performed by one-and-only-one <code>Sensor</code>. One <code>Sensor</code> MAY produce zero-to-many <code>Observations</code> in different <code>MultiDatastreams</code>.</td>
+    </tr>
+    <tr>
+      <td><code>ObservedProperty</code></td>
+      <td>Many optional to many mandatory</td>
+      <td>The <code>Observations</code> of a <code>MultiDatastream</code> SHALL observe the same <code>ObservedProperties</code> entity set.</td>
+    </tr>
+    <tr>
+      <td><code>Observation</code></td>
+      <td>One mandatory to many optional</td>
+      <td>A <code>MultiDatastream</code> has zero-to-many <code>Observations</code>. One <code>Observation</code> SHALL occur in one-and-only-one <code>MultiDatastream</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Table 12-3 Direct relation between an `MultiDatastream’s` `Observation` entity and other entity types
+
+<table>
+  <thead>
+    <tr>
+      <th>Entity Type</th>
+      <th>Relation</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>MultiDatastream</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>A <code>MultiDatastream</code> can have zero-to-many <code>Observations</code>. One <code>Observation</code> SHALL occur in one-and-only-one <code>MultiDatastream</code>.</td>
+    </tr>
+    <tr>
+      <td><code>FeatureOfInterest</code></td>
+      <td>Many optional to one mandatory</td>
+      <td>An <code>Observation</code> observes on one-and-only-one <code>FeatureOfInterest</code>. One <code>FeatureOfInterest</code> could be observed by one-to-many <code>Observations</code>.</td>
+    </tr>
+  </tbody>
+</table>
+
+    Req 40    The size and the order of each element of a Multidatastream's unitOfMeasurements array (i.e., MultiDatastream(id)/unitOfMeasurements) SHALL match the size and the order of each element of the related ObservedProperties collection (i.e., MultiDatastreams(id)/ObservedProperties).
+
+    The size and the order of each element of a MultiDatastream’s unitOfMeasurements array (i.e., MultiDatastreams(id)/unitOfMeasurements) SHALL match the size and the order of each element of all related Observations’ result (i.e., MultiDatastreams(id)/Observations?$select=result).
+
+    The size and the order of each element of a MultiDatastream’s unitOfMeasurements array (i.e., MultiDatastreams(id)/unitOfMeasurements) SHALL match the size and the order of each element of the MultiDatastream’s multiObservationDataTypes array (i.e., MultiDatastreams(id)/multiObservationDataTypes).
+
+    When a complex result’s element does not have a unit of measurement (e.g., a OM_TruthObservation type), the corresponding unitOfMeasurement element SHALL have null values.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/multi-datastream/constraints
+
+#### Example 32: `MultiDatastream` entity example 1
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/MultiDatastreams(1)",
+  "Thing@iot.navigationLink": "MultiDatastreams(1)/Thing",
+  "Sensor@iot.navigationLink": "MultiDatastreams(1)/Sensor",
+  "ObservedProperty@iot.navigationLink": "MultiDatastreams(1)/ObservedProperties",
+  "Observations@iot.navigationLink": "MultiDatastreams/Observations",
+  "description": "This is a MultiDatastream from a simple weather station measuring air temperature, relative humidity and visibility",
+  "observationType": "http://www.opengis.net/def/observationType/OGC- OM/2.0/OM_ComplexObservation",
+  "multiObservationDataTypes": [
+    "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+    "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement",
+    "http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_CategoryObservation"
+  ],
+  "unitOfMeasurements": [
+    {
+      "name": "degree Celsius",
+      "symbol": " °C",
+      "definition": " http://unitsofmeasure.org/ucum.html#para-30"
+    },
+    {
+      "name": " percent ",
+      "symbol": "%",
+      "definition": " http://unitsofmeasure.org/ucum.html#para-29"
+    },
+    {
+      "name": "null",
+      "symbol": "null",
+      "definition": "null"
+    }
+  ],
+  "observedArea": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [
+          100,
+          0
+        ],
+        [
+          101,
+          0
+        ],
+        [
+          101,
+          1
+        ],
+        [
+          100,
+          1
+        ],
+        [
+          100,
+          0
+        ]
+      ]
+    ]
+  },
+  "phenomenonTime": "2014-03-01T13:00:00Z/2015-05-11T15:30:00Z",
+  "resultTime": "2014-03-01T13:00:00Z/2015-05-11T15:30:00Z"
+}
+```
+
+#### Example 33: an example `ObservedProperties` collection of the above `MultiDatastream`: Please note that the order of the elements in the value array match the order of the related `Observations/result` array as well as the order of the related `unitOfMeasurements` array.
+
+```json
+{
+  "value": [
+    {
+      "@iot.id": 1,
+      "@iot.selfLink": "http://example.org/v1.0/ObservedProperties(1)",
+      "Datastreams@iot.navigationLink": "ObservedProperties(1)/Datastreams",
+      "MultiDatastreams@iot.navigationLink": "ObservedProperties(1)/MultiDatastreams",
+      "description": "The dew point is the temperature at which the water vapor in a sample of air at constant barometric pressure condenses into liquid water at the same rate at which it evaporates. At temperatures below the dew point, water will leave the air.",
+      "name": "Dew point temperature"
+    },
+    {
+      "@iot.id ": 2,
+      "@iot.selfLink": "http://example.org/v1.0/ObservedProperties(2)",
+      "Datastreams@iot.navigationLink": "ObservedProperties(2)/Datastreams",
+      "MultiDatastreams@iot.navigationLink": "ObservedProperties(2)/MultiDatastreams",
+      "description": "Relative humidity (abbreviated RH) is the ratio of the partial pressure of water vapor to the equilibrium vapor pressure of water at the same temperature.",
+      "name": "Relative Humidity"
+    },
+    {
+      "@iot.id": 3,
+      "@iot.selfLink": "http://example.org/v1.0/ObservedProperties(3)",
+      "Datastreams@iot.navigationLink": "ObservedProperties(3)/Datastreams",
+      "MultiDatastreams@iot.navigationLink": "ObservedProperties(3)/MultiDatastreams",
+      "description": "Visibility is a measure of the distance at which an object or light can be clearly discerned. ",
+      "name": "Visibility (Weather)"
+    }
+  ]
+}
+```
+
+#### Example 34: an example `Observation` of the above `MultiDatastream`: Please note that the order of the elements in the result array match (1) the order of the related `ObservedProperties` (i.e., `Observation(id)/MultiDatastreams(id)/ObservedProperties`), (2) the order of the related `unitOfMeasurements` array (i.e., `Observation(id)/ MultiDatastream(id)/unitOfMeasurements`) and (3) the order of the related `multiObservationDataTypes` (i.e., `Observation(id)/MultiDatastream(id)/multiObservationDataTypes`).
+
+```json
+{
+  "@iot.id": 1,
+  "@iot.selfLink": "http://example.org/v1.0/Observations(1)",
+  "FeatureOfInterest@iot.navigationLink": "Observations(1)/FeatureOfInterest",
+  "MultiDatastream@iot.navigationLink": "Observations(1)/MultiDatastream",
+  "phenomenonTime": "2014-12-31T11:59:59.00+08:00",
+  "resultTime": "2014-12-31T11:59:59.00+08:00",
+  "result": [
+    25,
+    65,
+    "clear"
+  ]
+}
+```
