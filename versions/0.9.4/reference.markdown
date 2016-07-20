@@ -3467,3 +3467,106 @@ Upon successful completion the service SHALL respond with `201 Created`. The res
       "error",
       "http://examples.org/v1.0/Observations(2)"
     ]
+
+## 14. SensorThings Sensing Profile MQTT Extension
+
+In addition to support HTTP protocol, a SensorThings service MAY support MQTT protocol to enhance the SensorThings service publish and subscribe capabilities. This section describes the SensorThings MQTT extension.
+
+### 14.1 Create a SensorThings entity with MQTT Publish
+
+    Req 42    To allow clients to create entities with MQTT Publish, a service SHALL support the creation of entities with MQTT as defined in Section 14.1.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/mqtt/create
+
+To create an entity in a collection with MQTT, the client sends a `MQTT Publish` request to the SensorThings service and the MQTT topic is the collection's resource path. The MQTT application message contains a single valid entity representation.
+
+If the MQTT topic for the collection is a `navigationLink`, the new entity is automatically linked to the entity containing the `navigationLink`.
+
+Similar to creating entities with `HTTP POST`, creating entities with `MQTT Publish` follow the integrity constraints listed in Table 10-1. The two special cases defined in Req 30 are also applied in the case of creating entities with `MQTT Publish`.
+
+#### 14.1.1 Link to existing entities when creating an entity
+
+To link to existing entities when creating an entity with MQTT, the conditions in Req 31 is applied.
+
+#### 14.1.2 Create related entities when creating an entity (deep insert)
+
+To create related entities when creating an entity with MQTT, the condition in Req 32 is applied.
+
+### 14.2 Update a SensorThings entity with MQTT Publish
+
+    Req 43    To allow clients to update SensorThings entities with MQTT Publish, a service SHALL support the updates of entities with MQTT as defined in Section 14.2.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/mqtt/update
+
+To update a SensorThings entity with `MQTT Publish`, the client sends a `MQTT Publish` request to the SensorThings service and the MQTT topic is the resource path addressing to the single entity.
+
+The properties provided in the payload (*i.e.*, MQTT application message) corresponding to updatable properties SHALL replace the value of the corresponding property in the entity. Missing properties of the containing entity of complex property SHALL not be directly altered.
+
+Key (*i.e.*, `id`) and other non-updatable properties (e.g., `navigationLink`) can be omitted from the request. If the request contains a value for one of these properties, the service SHALL ignore that value when applying the update. For example the service ignores entity `id` in the payload when applying the update.
+
+The entity SHALL NOT contain related entities as inline content. It MAY contain binding information for navigation properties. For single-valued navigation properties this replaces the relationship. For collection- valued navigation properties this adds to the relation.
+
+### 14.3 Receive updates with MQTT Subscribe
+
+    Req 44    To allow clients to receive notifications for the updates of SensorThings entities with MQTT, a service SHALL support the receiving updates with MQTT Subscribe as defined in Section 14.3.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/mqtt/receive-update
+
+To receive notifications from a SensorThings service when some entities updated, a client can send a `MQTT Subscribe` request to the SensorThings service. SensorThings API defined the following four MQTT subscription use cases.
+
+#### 14.3.1 Receive updates of a SensorThings entity set with `MQTT Subscribe`
+
+**MQTT Control Packet:** `Subscribe`
+
+**Topic Pattern:** `RESOURCE_PATH/COLLECTION_NAME`
+
+**Example Topic:** `Datastreams(1)/Observations`
+
+**Response:** When a new entity is added to the entity set (e.g., a new `Observation` created) or an existing entity of the entity set is updated, the service returns a complete JSON representation of the newly created or updated entity.
+
+#### 14.3.2 Receive updates of a SensorThings entity with `MQTT Subscribe`
+
+**MQTT Control Packet:** `Subscribe`
+
+**Topic Pattern:** `RESOURCE_PATH_TO_AN_ENTITY`
+
+**Example Topic:** `Datastreams(1)`
+
+**Response:** When a property of the subscribed entity is updated, the service returns a complete JSON representation of the updated entity.
+
+#### 14.3.3 Receive updates of a SensorThings entity’s property with `MQTT Subscribe`
+
+**MQTT Control Packet:** `Subscribe`
+
+**Topic Pattern:** `RESOURCE_PATH_TO_AN_ENTITY/PROPERTY_NAME`
+
+**Example Topic:** `Datastreams(1)/observedArea`
+
+**Response:** When the value of the subscribed property is changed, the service returns a JSON object. The returned JSON object follows as defined in Section 9.2.4 - Usage 4: address to a property of an entity.
+
+#### Example 39: an example response of receiving updates of an entity’s property with `MQTT Subscribe`
+
+The example shows a sample response of the following MQTT topic subscription – `Datastreams(1)/description`
+
+    {
+      "description": "This is an updated description of a thing"
+    }
+
+#### 14.3.4 Receive updates of the selected properties of the newly created entities or updated entities of a SensorThings entity set with `MQTT Subscribe`
+
+**MQTT Control Packet:** `Subscribe`
+
+**Topic Pattern:** `RESOURCE_PATH/COLLECTION_NAME?$select=PROPERTY_1,PROPERTY_2,...`
+
+**Response:** When a new entity is added to an entity set or an existing entity is updated (e.g., a new `Observation` created or an existing `Observation` is updated), the service returns a JSON representation of the selected properties of the newly created or updated entity.
+
+Note: In the case of an entity’s property is updated, it is possible that the selected properties are not the updated property, so that the returned JSON does not reflect the update.
+
+#### Example 40: an example response of receiving updates of the selected property of an entity set with `MQTT Subscribe`
+
+The example shows a sample response of the following MQTT topic subscription - `Datastreams(1)/Observations?$select=phenomenonTime,result`
+
+    {
+      "result": 45,
+      "phenonmenonTime": "2015-02-05T17:00:00Z"
+    }
