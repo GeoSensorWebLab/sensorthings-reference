@@ -2241,3 +2241,35 @@ In order to support spatial relationship functions, SensorThings API defines nin
     </tr>
   </tbody>
 </table>
+
+#### 9.4.6 Server-Driven Paging (`nextLink`)
+
+    Req 29    An OGC SensorThings API service SHOULD support the server-driven paging mechanism listed in section 9.4.6.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/pagination
+
+Responses that include only a partial set of the items identified by the request URL SHALL contain a link that allows retrieving the next partial set of items. This link is called a `nextLink`; its representation is format-specific. The final partial set of items SHALL NOT contain a `nextLink`.
+
+The `nextLink` annotation indicates that a response is only a subset of the requested collection of entities or collection of entity references. It contains a URL that allows retrieving the next subset of the requested collection.
+
+SensorThings clients SHALL treat the URL of the `nextLink` as opaque, and SHALL NOT append system query options to the URL of a next link. Services may not allow a change of format on requests for subsequent pages using the next link.
+
+[Adapted from OData 4.0-Protocol 11.2.5.7]
+
+**Example 25:** `http://example.org/v1.0/Things` returns a subset of the `Thing` entities of requested
+collection of `Things`. The `nextLink` contains a link allowing retrieving the next partial set of items.
+
+**Example Response:**
+
+```json
+{
+  "value": [
+    {
+      // Entity omitted for example
+    },
+    {
+      // Entity omitted for example
+    }
+  ],
+  "@iot.nextLink": "http://example.org/v1.0/Things?$top=100&$skip=100"
+}
+```
