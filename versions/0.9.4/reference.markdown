@@ -1901,3 +1901,343 @@ The OGC SensorThings API supports a set of built-in filter operations, as descri
   </tbody>
 </table>
 
+##### 9.4.5.2 Built-in query functions
+
+The OGC SensorThings API supports a set of functions that can be used with the `$filter` or `$orderby` query operations. The following table lists the available functions and they follows the OData Canonical function definitions listed in Section 5.1.1.4 of the [OData Version 4.0 Part 2: URL Conventions] and the syntax rules for these functions are defined in [OData Version 4.0 ABNF].
+
+In order to support spatial relationship functions, SensorThings API defines nine additional geospatial functions based on the spatial relationship between two geometry objects. The spatial relationship functions are defined in the OGC Simple Feature Access specification [OGC 06-104r4 part 1, clause 6.1.2.3]. The names of these nine functions start with a prefix "st_" following the OGC Simple Feature Access specification [OGC 06-104r4]. In addition, the Well-Known Text (WKT) format is the default input geometry for these nine functions.
+
+    Req 28    The built-in query functions SHALL be as defined in Table 9-2.
+    http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/built-in-query-functions
+
+#### Table 9-2 Built-in Query Functions
+
+<table>
+  <thead>
+    <tr>
+      <th>Function</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="2">String Functions</th>
+    </tr>
+    <tr>
+      <td><code>
+        bool substringof(string p0, string p1)
+      </code></td>
+      <td><code>
+        substringof('Sensor Things',description)
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool endswith(string p0, string p1)
+      </code></td>
+      <td><code>
+        endswith(description,'Things')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool startswith(string p0, string p1)
+      </code></td>
+      <td><code>
+        startswith(description,'Sensor')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        int length(string p0)
+      </code></td>
+      <td><code>
+        length(description) eq 13
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        int indexof(string p0, string p1)
+      </code></td>
+      <td><code>
+        indexof(description,'Sensor') eq 1
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        string substring(string p0, int p1)
+      </code></td>
+      <td><code>
+        substring(description,1) eq 'ensor Things'
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        string tolower(string p0)
+      </code></td>
+      <td><code>
+        tolower(description) eq 'sensor things'
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        string toupper(string p0)
+      </code></td>
+      <td><code>
+        toupper(description) eq 'SENSOR THINGS'
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        string trim(string p0)
+      </code></td>
+      <td><code>
+        trim(description) eq 'Sensor Things'
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        string concat(string p0, string p1)
+      </code></td>
+      <td><code>
+        concat(concat(unitOfMeasurement/symbol,', '), unitOfMeasurement/name) eq 'degree, Celsius'
+      </code></td>
+    </tr>
+    <tr>
+      <th colspan="2">Date Functions</th>
+    </tr>
+    <tr>
+      <td><code>
+        int year
+      </code></td>
+      <td><code>
+        year(resultTime) eq 2015
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        int month
+      </code></td>
+      <td><code>
+        month(resultTime) eq 12
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      int day
+      </code></td>
+      <td><code>
+        day(resultTime) eq 8
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      int hour
+      </code></td>
+      <td><code>
+        hour(resultTime) eq 1
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      int minute
+      </code></td>
+      <td><code>
+        minute(resultTime) eq 0
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      int second
+      </code></td>
+      <td><code>
+        second(resultTime) eq 0
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      int fractionalseconds
+      </code></td>
+      <td><code>
+      fractionalseconds(resultTime) eq 0
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      date
+      </code></td>
+      <td><code>
+        date(resultTime) ne date(validTime)
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      time
+      </code></td>
+      <td><code>
+        time(resultTime) le validTime
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      int totaloffsetminutes
+      </code></td>
+      <td><code>
+        totaloffsetminutes(resultTime) eq 60
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      now
+      </code></td>
+      <td><code>
+        resultTime ge now()
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      mindatetime
+      </code></td>
+      <td><code>
+        resultTime eq mindatetime()
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      maxdatetime
+      </code></td>
+      <td><code>
+        resultTime eq maxdatetime()
+      </code></td>
+    </tr>
+    <tr>
+      <th colspan="2">Math Functions</th>
+    </tr>
+    <tr>
+      <td><code>
+      round
+      </code></td>
+      <td><code>
+        round(result) eq 32
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      floor
+      </code></td>
+      <td><code>
+        floor(result) eq 32
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+      ceiling
+      </code></td>
+      <td><code>
+        ceiling(result) eq 33
+      </code></td>
+    </tr>
+    <tr>
+      <th colspan="2">Geospatial Functions</th>
+    </tr>
+    <tr>
+      <td><code>
+        double geo.distance(Point p0, Point p1)
+      </code></td>
+      <td><code>
+        geo.distance(location, geography'POINT (30 10) ')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        double geo.length(LineString p0)
+      </code></td>
+      <td><code>
+        geo.length(geography'LINESTRING (30 10, 10 30, 40 40) ')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool geo.intersects(Point p0, Polygon p1)
+      </code></td>
+      <td><code>
+        geo.intersects(location, geography'POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))')
+      </code></td>
+    </tr>
+    <tr>
+      <th colspan="2">Spatial Relationship Functions</th>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_equals
+      </code></td>
+      <td><code>
+        st_equals(location, geography'POINT (30 10)')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_disjoint
+      </code></td>
+      <td><code>
+        st_disjoint(location, geography'POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_touches
+      </code></td>
+      <td><code>
+        st_touches(location, geography'LINESTRING (30 10, 10 30, 40 40)')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_within
+      </code></td>
+      <td><code>
+        st_within(location, geography'POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_overlaps
+      </code></td>
+      <td><code>
+        st_overlaps(location, geography'POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_crosses
+      </code></td>
+      <td><code>
+        st_crosses(location, geography'LINESTRING (30 10, 10 30, 40 40)')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_intersects
+      </code></td>
+      <td><code>
+        st_intersects(location, geography'LINESTRING (30 10, 10 30, 40 40)')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_contains
+      </code></td>
+      <td><code>
+        st_contains(location, geography'POINT (30 10)')
+      </code></td>
+    </tr>
+    <tr>
+      <td><code>
+        bool st_relate
+      </code></td>
+      <td><code>
+        st_relate(location, geography'POLYGON ((30 10, 10 20, 20 40, 40 40, 30 10))', 'T********')
+      </code></td>
+    </tr>
+  </tbody>
+</table>
