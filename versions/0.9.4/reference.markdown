@@ -3203,3 +3203,267 @@ The `MultiDatastream` extension entities are depicted in Figure 2.
   ]
 }
 ```
+
+## 13. SensorThings Data Array Extension
+
+    Req 41    To support the SensorThings data array extension, a service SHALL support the retrieval and creation of observations as defined in Section 13.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/data-array/data-array
+
+Similar to the SWE DataArray in the OGC SOS, SensorThings API also provides the support of `dataArray` (in addition to formatting every observation entity as a JSON object) to aggregate multiple `Observation` entities and reduce the request (e.g., `POST`) and response (e.g., `GET`) size. SensorThings mainly use `dataArray` in two scenarios: (1) get `Observation` entities in `dataArray`, and (2) create `Observation` entities with `dataArray`.
+
+### 13.1 Retrieve a `Datastream`’s `Observation` entities in `dataArray`
+
+In SensorThings services, users are able to request for multiple `Observation` entities and format the entities in the `dataArray` format. When a SensorThings service returns a `dataArray` response, the service groups `Observation` entities by `Datastream` or `MultiDatastream`, which means the `Observation` entities that link to the same `Datastream` or the same `MultiDatastream` are aggregated in one `dataArray`.
+
+#### 13.1.1 Request
+
+In order to request for `dataArray`, users must include the query option "`$resultFormat=dataArray`" when requesting `Observation` entities. For example, `http://example.org/v1.0/Observations?$resultFormat=dataArray`.
+
+#### 13.1.2 Response
+
+The response `Observations` in `dataArray` format contains the following properties.
+
+#### Table 13-1 Properties of getting `Observation` entities in `dataArray`
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Datastream or MultiDatastream</code></td>
+      <td>The <code>navigationLink</code> of the <code>Datastream</code> or the <code>MultiDatastream</code> entity used to group <code>Observation</code> entities in the <code>dataArray</code>.</td>
+      <td><code>navigationLink</code></td>
+      <td>One (mandatory)</td>
+    </tr>
+    <tr>
+      <td><code>components</code></td>
+      <td>An ordered array of <code>Observation</code> property names whose matched values are included in the <code>dataArray</code>.</td>
+      <td>An ordered array of <code>Observation</code> property names</td>
+      <td>One (mandatory)</td>
+    </tr>
+    <tr>
+      <td><code>dataArray</code></td>
+      <td>A JSON Array containing <code>Observation</code> entities. Each <code>Observation</code> entity is represented by the ordered property values, which match with the ordered property names in components.</td>
+      <td>JSON Array</td>
+      <td>One (mandatory)</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Example 35: an example of getting `Observation` entities from a `Datastream` in `dataArray` result format
+
+    GET /Datastreams(1)/Observations?$resultFormat=dataArray
+    HTTP/1.1 200 OK
+    Host: www.example.org/v1.0
+    Content-Type: application/json
+    {
+      "value": [
+        {
+          "Datastream@iot.navigationLink": "Datastreams(1)",
+          "components": [
+            "id",
+            "phenomenonTime",
+            "resultTime",
+            "result"
+          ],
+          "dataArray@iot.count": 3,
+          "dataArray": [
+            [
+              1,
+              "2005-08-05T12:21:13Z",
+              "2005-08-05T12:21:13Z",
+              20
+            ],
+            [
+              2,
+              "2005-08-05T12:22:08Z",
+              "2005-08-05T12:21:13Z",
+              30
+            ],
+            [
+              3,
+              "2005-08-05T12:22:54Z",
+              "2005-08-05T12:21:13Z",
+              0
+            ]
+          ]
+        }
+      ]
+    }
+
+#### Example 36: an example of getting `Observation` entities from a `MultiDatastream` in `dataArray` result format
+
+    GET /V1.0/MultiDatastreams(1)/Observations?$resultFormat=dataArray
+    HTTP/1.1 200 OK
+    Host: www.example.org
+    Content-Type: application/json
+    {
+      "value": [
+        {
+          "MultiDatastream@iot.navigationLink": "MultiDatastreams(1)",
+          "components": [
+            "id",
+            "phenomenonTime",
+            "resultTime",
+            "result"
+          ],
+          "dataArray@iot.count": 3,
+          "dataArray": [
+            [
+              1,
+              "2010-12-23T11:20:00-0700",
+              "2010-12-23T11:20:00-0700",
+              [
+                10.2,
+                65,
+                "clear"
+              ]
+            ],
+            [
+              2,
+              "2010-12-23T11:22:08-0700",
+              "2010-12-23T11:20:00-0700",
+              [
+                11.3,
+                63,
+                "clear"
+              ]
+            ],
+            [
+              3,
+              "2010-12-23T11:22:54-0700",
+              "2010-12-23T11:20:00-0700",
+              [
+                9.8,
+                67,
+                "clear"
+              ]
+            ]
+          ]
+        }
+      ]
+    }
+
+### 13.2 Create `Observation` entities with `dataArray`
+
+Besides creating `Observation` entities one by one with multiple HTTP POST requests, there is a need to create multiple `Observation` entities with a lighter message body in a single HTTP request. In this case, a sensing system can buffer multiple `Observations` and send them to a SensorThings service in one HTTP request. Here we propose an Action operation `CreateObservations`.
+
+#### 13.2.1 Request
+
+Users can invoke the `CreateObservations` action by sending a HTTP `POST` request to the `SERVICE_ROOT_URL/CreateObservations`.
+
+For example, `http://example.org/v1.0/CreateObservations`.
+
+The message body aggregates `Observations` by `Datastreams`, which means all the `Observations` linked to one `Datastream` SHALL be aggregated in one JSON object. The parameters of each JSON object are shown in the following table.
+
+As an `Observation` links to one `FeatureOfInterest`, to establish the link between an Observation and a `FeatureOfInterest`, users should include the `FeatureOfInterest` `ids` in the `dataArray`. If no `FeatureOfInterest` `id` presented, the `FeatureOfInterest` will be created based on the `Location` entities of the linked `Thing` entity by default.
+
+#### Table 13-2 Properties of creating `Observation` entities with `dataArray`
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Definition</th>
+      <th>Data type</th>
+      <th>Multiplicity and use</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>Datastream</code></td>
+      <td>The unique identifier of the <code>Datasteam</code> linking to the group of <code>Observation</code> entities in the <code>dataArray</code>.</td>
+      <td>The unique identifier of a Datastream</td>
+      <td>One (mandatory)</td>
+    </tr>
+    <tr>
+      <td><code>components</code></td>
+      <td>An ordered array of <code>Observation</code> property names whose matched values are included in the <code>dataArray</code>. At least the <code>phenomenonTime</code> and <code>result</code> properties SHALL be included. To establish the link between an <code>Observation</code> and a <code>FeatureOfInterest</code>, the component name is "<code>FeatureOfInterest/id</code>" and the <code>FeatureOfInterest</code> <code>ids</code> should be included in the <code>dataArray</code> array. If no <code>FeatureOfInterest</code> <code>id</code> is presented, the <code>FeatureOfInterest</code> will be created based on the <code>Location</code> entities of the linked <code>Thing</code> entity by default.</td>
+      <td>An ordered array of <code>Observation</code> property names</td>
+      <td>One (mandatory)</td>
+    </tr>
+    <tr>
+      <td><code>dataArray</code></td>
+      <td>A JSON Array containing <code>Observations</code>. Each <code>Observation</code> is represented by the ordered property values. The ordered property values match with the ordered property names in components.</td>
+      <td>JSON Array</td>
+      <td>One (mandatory)</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Example 37: example of a request for creating `Observation` entities in `dataArray`
+
+    POST /CreateObservations HTTP/1.1
+    Host: example.org/v1.0
+    Content-Type: application/json
+    [
+      {
+        "Datastream": {
+          "@iot.id": 1
+        },
+        "components": [
+          "phenomenonTime",
+          "result",
+          "FeatureOfInterest/id"
+        ],
+        "dataArray@iot.count": 2,
+        "dataArray": [
+          [
+            "2010-12-23T10:20:00-0700",
+            20,
+            1
+          ],
+          [
+            "2010-12-23T10:21:00-0700",
+            30,
+            1
+          ]
+        ]
+      },
+      {
+        "Datastream": {
+          "@iot.id": 2
+        },
+        "components": [
+          "phenomenonTime",
+          "result",
+          "FeatureOfInterest/id"
+        ],
+        "dataArray@iot.count": 2,
+        "dataArray": [
+          [
+            "2010-12-23T10:20:00-0700",
+            65,
+            1
+          ],
+          [
+            "2010-12-23T10:21:00-0700",
+            60,
+            1
+          ]
+        ]
+      }
+    ]
+
+#### 13.2.2 Response
+
+Upon successful completion the service SHALL respond with `201 Created`. The response message body SHALL contain the URLs of the created `Observation` entities, where the order of URLs must match with the order of `Observations` in the `dataArray` from the request. In the case of the service having exceptions when creating individual observation entities, instead of responding with URLs, the service must specify "`error`" in the corresponding array element.
+
+#### Example 38: an example of a response of creating `Observation` entities with `dataArray`
+
+    POST /v1.0/CreateObservations HTTP/1.1
+    201 Created
+    Host: example.org
+    Content-Type: application/json
+    [
+      "http://examples.org/v1.0/Observations(1)",
+      "error",
+      "http://examples.org/v1.0/Observations(2)"
+    ]
