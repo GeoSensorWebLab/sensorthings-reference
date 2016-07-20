@@ -2273,3 +2273,400 @@ collection of `Things`. The `nextLink` contains a link allowing retrieving the n
   "@iot.nextLink": "http://example.org/v1.0/Things?$top=100&$skip=100"
 }
 ```
+
+## 10. Sensing Profile CRUD
+
+### 10.1 Overview
+
+As many IoT devices are resource-constrained, the SensorThings API adopts the efficient REST web service style. That means the CRUD actions can be performed on the SensorThings entity types. The following subsection explains the CRUD protocol.
+
+### 10.2 Create an entity
+
+    Req 30    To create an entity in a collection, the client SHALL send a HTTP POST request to that collection's URL. The POST body SHALL contain a single valid entity representation.
+
+    If the target URL for the collection is a navigationLink, the new entity is automatically linked to the entity containing the navigationLink.
+
+    Upon successful completion, the response SHALL contain a HTTP location header that contains the selfLink of the created entity.
+
+    Upon successful completion the service SHALL respond with either 201 Created, or 204 No Content.
+
+    [Adapted from Data 4.0-Protocol, 11.4.2 Create an Entity]
+
+    In addition, the link between entities SHALL be established upon creating an entity. Two use cases SHALL be considered: (1) link to existing entities when creating an entity, and (2) create related entities when creating an entity. The requests for these two use cases are described in the following subsection.
+    When clients create resources in a SensorThings service, they SHALL follow the integrity constraints listed in Table 10-1. For example, a Datastream entity shall link to a Thing entity. When a client wants to create a Datastream entity, the client needs to either (1) create a linked Thing entity in the same request or (2) link to an already created Thing entity. The complete integrity constraints for creating resources are shown in the following table.
+
+    Special case #1 - When creating an Observation entity that links to a FeatureOfInterest entity: SometimestheFeatureOfInterestofanObservationistheLocationoftheThing. Forexample,a wifi-connected thermostat’s temperature observation’s feature-of-interest can be the location of the smart thermostat, that is the room where the smart thermostat is located in.
+
+    In this case, when a client creates an Observation entity, the client SHOULD omit the link to a FeatureOfInterest entity in the POST body message and SHOULD not create a related FeatureOfInterest entity with deep insert. And if the service detects that there is no link to a FeatureOfInterest entity in the POST body message that creates an Observation entity, the service SHALL either (1) create a FeatureOfInterest entity by using the location property from the Location of the Thing entity when there is no FeatureOfInterest whose location property is from the Location of the Thing entity or (2) link to the FeatureOfInterest whose location property is from the Location of the Thing entity.
+
+    Special case #2: In the context of IoT, many Observations’ resultTime and phenomenonTime cannot be distinguished or the resultTime is not available. In this case, when a client creates an Observation entity, the client MAY omit the resultTime and the service SHOULD assign a null value to the resultTime.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/create-entity
+
+#### Table 10-1 Integrity constraints when creating an entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Integrity Constraints</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Create a <code>Thing</code> entity</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Create a <code>Location</code> entity</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Create a <code>Datastream</code> entity</td>
+      <td>
+        <ul>
+          <li>SHALL link to a <code>Thing</code> entity.</li>
+          <li>SHALL link to a <code>Sensor</code> entity.</li>
+          <li>SHALL link to a <code>ObservedProperty</code> entity.</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>Create a <code>Sensor</code> entity</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Create an <code>ObservedProperty</code> entity</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Create an <code>Observation</code> entity</td>
+      <td>
+        <ul>
+          <li>SHALL link to a <code>Datastream</code> entity.</li>
+          <li>SHALL link to a <code>FeatureOfInterest</code> entity. If no link specified, the service SHALL create a <code>FeatureOfInterest</code> entity from the content of the <code>Location</code> entities.</li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>Create a <code>FeatureOfInterest</code> entity</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+#### 10.2.1 Request
+
+**HTTP Method:** `POST`
+
+**URI Pattern:** `SERVICE_ROOT_URI/COLLECTION_NAME`
+
+**Header:** `Content-Type: application/json`
+
+**Message Body:** A single valid entity representation for the specified collection.
+
+#### Example 26: create a `Thing` entity
+
+    POST /Things HTTP/1.1
+    Host: example.org/v1.0
+    Content-Type: application/json
+    {
+      "description": "This is a smart thermostat."
+    }
+
+##### 10.2.1.1 Link to existing entities when creating an entity
+
+    Req 31    A SensorThings API service, that supports entity creation, SHALL support linking new entities to existing entities upon creation. To create a new entity with links to existing entities in a single request, the client SHALL include the unique identifiers of the related entities associated with the corresponding navigation properties in the request body.
+
+    In the case of creating an Observation whose FeatureOfInterest is the Thing’s Location (that means the Thing entity has a related Location entity), the request of creating the Observation SHOULD NOT include a link to a FeatureOfInterest entity. The service will first automatically create a FeatureOfInterest entity from the Location of the Thing and then link to the Observation.
+
+    In the complex use case of a Thing has multiple Location representations, the service SHOULD decide the default Location encoding when an Observation’s FeatureOfInterest is the Thing’s Location.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/link-to-existing-entities
+
+#### Example 27: create an `Observation` entity, which links to an existing `Sensor` entity (whose `id` is 1), an existing `FeatureOfInterest` entity (whose `id` is 2).
+
+    POST /Observations HTTP/1.1
+    Host: example.org/v1.0
+    Content-Type: application/json
+    {
+      "Datastream": {
+        "@iot.id": 1
+      },
+      "phenomenonTime": “2013-04-18T16:15:00-07:00",
+      "result": 124,
+      "FeatureOfInterest": {
+        "@iot.id": 2
+      }
+    }
+
+##### 10.2.1.2 Create related entities when creating an entity
+
+    Req 32    A request to create an entity that includes related entities, represented using the appropriate inline representation, is referred to as a "deep insert". A SensorThings service that supports entity creation SHALL support deep insert.
+
+    If the inline representation contains a value for a computed property (i.e., id), the service SHALL ignore that value when creating the related entity.
+
+    On success, the service SHALL create all entities and relate them. On failure, the service SHALL NOT create any of the entities.
+
+    [Adapted from Data 4.0-Protocol 11.4.2.2]
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/deep-insert
+
+#### Example 28: create a `Thing` while creating two related `Sensors` and one related `Observation` (which links to an existing `FeatureOfInterest` entity and an existing `ObservedProperty` entity).
+
+    POST /Things HTTP/1.1
+    Host: example.org/v1.0
+    Content-Type: application/json
+    {
+      "description": "This a Thing with one Datastream.",
+      "Locations": [
+        {
+          "encodingType": "application/vnd.geo+json",
+          "location": {
+            "type": "POINT",
+            "coordinates": [
+              10,
+              10
+            ]
+          }
+        }
+      ],
+      "Datastreams": [
+        {
+          "description": "This is a datastream for an oven’s internal temperature.",
+          "unitOfMeasurement": {
+            "name": "degree Celsius",
+            "symbol": "°C",
+            "definition": "http://unitsofmeasure.org/ucum.html#para-30"
+          },
+          "observationType": "http://www.opengis.net/def/observationType/OGC- OM/2.0/OM_Measurement",
+          "observedArea": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  100,
+                  0
+                ],
+                [
+                  101,
+                  0
+                ],
+                [
+                  101,
+                  1
+                ],
+                [
+                  100,
+                  1
+                ],
+                [
+                  100,
+                  0
+                ]
+              ]
+            ]
+          },
+          "phenomenonTime": "2009-01-11T16:22:25.00Z/2011-08-21T08:32:10.00Z",
+          "Observations": [
+            {
+              "phenomenonTime": "2012-06-26T03:42:02-0600",
+              "result": 70.4,
+              "FeatureOfInterest": {
+                "description": "This is CCIT #361, Steve’s office",
+                "encodingType": "application/vnd.geo+json",
+                "feature": {
+                  "type": "POLYGON",
+                  "coordinates": [
+                    [
+                      [
+                        100,
+                        50
+                      ],
+                      [
+                        10,
+                        9
+                      ],
+                      [
+                        23,
+                        4
+                      ],
+                      [
+                        100,
+                        50
+                      ]
+                    ],
+                    [
+                      [
+                        30,
+                        20
+                      ],
+                      [
+                        10,
+                        4
+                      ],
+                      [
+                        4,
+                        22
+                      ],
+                      [
+                        30,
+                        20
+                      ]
+                    ]
+                  ]
+                }
+              }
+            }
+          ],
+          "ObservedProperty": {
+            "name": "DewPoint Temperature",
+            "definition": "http://sweet.jpl.nasa.gov/ontology/property.owl#DewPointTemperature",
+            "description": "The dewpoint temperature is the temperature to which the air must be cooled, at constant pressure, for dew to form. As the grass and other objects near the ground cool to the dewpoint, some of the water vapor in the atmosphere condenses into liquid water on the objects."
+          },
+          "Sensor": {
+            "encodingType": "application/pdf",
+            "metadata": "http://datasheets.maxim-ic.com/en/ds/DS18B20.pdf"
+          }
+        }
+      ]
+    }
+
+#### 10.2.2 Response
+
+    Req 33    Upon successfully creating an entity, the service response SHALL contain a Location header that contains the URL of the created entity. Upon successful completion the service SHALL respond with 201 Created. Regarding all the HTTP status code, please refer to the HTTP Status Code section.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/deep-insert-status-code
+
+### 10.3 Read entities
+
+    Req 34    A SensorThings service SHALL support reading resources as defined in Section 10.3.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/core/read-entity
+
+#### 10.3.1 Request
+
+**HTTP Method:** `GET`
+
+**URI Pattern:** Refer to the SensorThings service interface section (*i.e.*, section 9), including resource path and query options
+
+#### 10.3.2 Response
+
+The detail explanation about the encodings of resources in the Sensing Profile can be found in section 8.3.
+
+Upon successfully retrieve resources, the service responds with `200 OK`. Regarding all the HTTP status code, please refer to the HTTP Status Code section.
+
+### 10.4 Update an entity
+
+    Req 35    To update an entity in a collection a SensorThings service SHALL follow the requirements as defined in Section 10.4.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/update-entity
+
+#### 10.4.1 Request
+
+In SensorThings `PATCH` is the preferred means of updating an entity. `PATCH` provides more resiliency between clients and services by directly modifying only those values specified by the client.
+
+The semantics of `PATCH`, as defined in [RFC5789], is to merge the content in the request payload with the entity’s current state, applying the update only to those components specified in the request body. The properties provided in the payload corresponding to updatable properties SHALL replace the value of the corresponding property in the entity. Missing properties of the containing entity or complex property SHALL NOT be directly altered.
+
+Services MAY additionally support `PUT`, but should be aware of the potential for data-loss in round-tripping properties that the client may not know about in advance, such as open or added properties, or properties not specified in metadata. Services that support `PUT` SHALL replace all values of structural properties with those specified in the request body. Omitting a non-nullable property with no service-generated or default value from a `PUT` request results in a `400 Bad Request` error.
+
+Key and other non-updatable properties that are not tied to key properties of the principal entity, can be omitted from the request. If the request contains a value for one of these properties, the service SHALL ignore that value when applying the update.
+
+The service ignores entity `id` in the payload when applying the update.
+
+The entity SHALL NOT contain related entities as inline content. It MAY contain binding information for navigation properties. For single-valued navigation properties this replaces the relationship. For collection- valued navigation properties this adds to the relationship.
+
+On success, the response SHALL be a valid success response.
+
+[Adapted from OData 4.0-Protocol 11.4.3]
+
+**HTTP Method:** `PATCH` or `PUT`
+
+**URI Pattern:** An URI addressing to a single entity.
+
+**Header:** `Content-Type: application/json`
+
+**Message Body:** A single entity representation including a subset of properties for the specified collection.
+
+#### Example 29: update the `Thing` whose `id` is 1.
+
+    PATCH /Things(1) HTTP/1.1
+    Host: example.org/v1.0/
+    Content-Type: application/json
+    {
+      "description": "This thing is an oven."
+    }
+
+#### 10.4.2 Response
+
+On success, the response SHALL be a valid success response. In addition, when the client sends an update request to a valid URL where an entity does not exist, the service SHALL fail the request.
+
+Upon successful completion, the service must respond with `200 OK` or `204 No Content`. Regarding all the HTTP status code, please refer to the HTTP Status Code section.
+
+### 10.5 Delete an entity
+
+    Req 36    To delete an entity in a collection a SensorThings service SHALL follow the requirements as defined in section 10.5.
+
+    http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/delete-entity
+
+#### 10.5.1 Request
+
+A successful `DELETE` request to an entity's edit URL deletes the entity. The request body SHOULD be empty.
+
+Services SHALL implicitly remove relations to and from an entity when deleting it; clients need not delete the
+relations explicitly.
+
+Services MAY implicitly delete or modify related entities if required by integrity constraints. Table 10-2 listed SensorThings API’s integrity constraints when deleting an entity.
+
+**HTTP Method:** `DELETE`
+
+**URI Pattern:** An URI addressing to a single entity.
+
+#### Example 30: delete the `Thing` with unique identifier equals to 1
+
+    DELETE http://example.org/v1.0/Things(1)
+
+#### Table 10-2 Integrity constraints when deleting an entity
+
+<table>
+  <thead>
+    <tr>
+      <th>Scenario</th>
+      <th>Integrity Constraints</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Delete a <code>Thing</code> entity</td>
+      <td>Delete all the <code>Datastream</code> entities linked to the <code>Thing</code> entity.</td>
+    </tr>
+    <tr>
+      <td>Delete a <code>Location</code> entity</td>
+      <td>Delete all the <code>HistoricalLocation</code> entities linked to the <code>Location</code> entity</td>
+    </tr>
+    <tr>
+      <td>Delete a <code>Datastream</code> entity</td>
+      <td>Delete all the <code>Observation</code> entities linked to the <code>Datastream</code> entity.</td>
+    </tr>
+    <tr>
+      <td>Delete a <code>Sensor</code> entity</td>
+      <td>Delete all the <code>Datastream</code> entities linked to the <code>Sensor</code> entity.</td>
+    </tr>
+    <tr>
+      <td>Delete an <code>ObservedProperty</code> entity</td>
+      <td>Delete all the <code>Datastream</code> entities linked to the <code>ObservedProperty</code> entity.</td>
+    </tr>
+    <tr>
+      <td>Delete an <code>Observation</code> entity</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Delete a <code>FeatureOfInterest</code> entity</td>
+      <td>Delete all the <code>Observation</code> entities linked to the <code>FeatureOfInterest</code> entity.</td>
+    </tr>
+    <tr>
+      <td>Delete a <code>HistoricalLocation</code> entity</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
