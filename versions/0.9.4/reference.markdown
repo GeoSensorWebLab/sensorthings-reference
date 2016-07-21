@@ -18,130 +18,115 @@ The OGC SensorThings API provides an open standard-based framework to interconne
 
 Conformance with this standard shall be checked using all the relevant tests specified in Annex A (normative), Abstract Test Suite.
 
-The following tables list the requirements classes defined by this standard.
+#### Requirements class id: http://www.opengis.net/spec/iot_sensing/1.0/req/entities
 
-NOTE: The smaller blue text in the following tables is the path fragment that appended to the following URI: http://www.opengis.net/spec/iot_sensing/1.0/, and it provides the URI that can be used to unambiguously identify the requirement and the conformance class.
+**Requirements:**
 
-<table>
-  <thead>
-    <tr>
-      <th>Requirements class id</th>
-      <th>Requirements</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>req/entities</td>
-      <td>
-        <ul>
-          <li>req/core/common-control-information</li>
-          <li>req/core/thing-properties</li>
-          <li>req/core/location-properties</li>
-          <li>req/core/historical-location-properties</li>
-          <li>req/core/datastream-properties</li>
-          <li>req/core/sensor-properties</li>
-          <li>req/core/observed-property-properties</li>
-          <li>req/core/observation-properties</li>
-          <li>req/core/feature-of-interest-properties</li>
-          <li>req/core/thing-relations</li>
-          <li>req/core/location-relations</li>
-          <li>req/core/historical-location-relations</li>
-          <li>req/core/datastream-relations</li>
-          <li>req/core/sensor-relations</li>
-          <li>req/core/observed-property-relations</li>
-          <li>req/core/observation-relations</li>
-          <li>req/core/feature-of-interest-relations</li>
-          <li>req/core/resource-path-to-entities</li>
-          <li>req/core/read-entity</li>
-        </ul>
-      </td>
-      <td>Entities of the SensorThings API service and addressing to the entities</td>
-    </tr>
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/common-control-information
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/thing-properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/location-properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/historical-location-properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/datastream-properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/sensor-properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/observed-property-properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/observation-properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/feature-of-interest-properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/thing-relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/location-relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/historical-location-relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/datastream-relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/sensor-relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/observed-property-relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/observation-relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/feature-of-interest-relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/resource-path-to-entities
+* http://www.opengis.net/spec/iot_sensing/1.0/req/core/read-entity
 
-    <tr>
-      <td>req/request-data</td>
-      <td>
-        <ul>
-          <li>req/request-data/order</li>
-          <li>req/request-data/expand</li>
-          <li>req/request-data/select</li>
-          <li>req/request-data/status-code</li>
-          <li>req/request-data/query-status-code</li>
-          <li>req/request-data/orderby</li>
-          <li>req/request-data/top</li>
-          <li>req/request-data/skip</li>
-          <li>req/request-data/count</li>
-          <li>req/request-data/filter</li>
-          <li>req/request-data/built-in-filter-operations</li>
-          <li>req/request-data/built-in-filter-functions</li>
-          <li>req/request-data/pagination</li>
-        </ul>
-      </td>
-      <td>Requesting data with system query options</td>
-    </tr>
+**Description:**
 
-    <tr>
-      <td>req/create-update-delete</td>
-      <td>
-        <ul>
-          <li>req/create-update-delete/create-entity</li>
-          <li>req/create-update-delete/link-to-existing-entities</li>
-          <li>req/create-update-delete/deep-insert</li>
-          <li>req/create-update-delete/deep-insert-status-code</li>
-          <li>req/create-update-delete/update-entity</li>
-          <li>req/create-update-delete/delete-entity</li>
-          <li>req/historical-location-auto-creation</li>
-        </ul>
-      </td>
-      <td>Creating, updating, and deleting entities</td>
-    </tr>
+Entities of the SensorThings API service and addressing to the entities
 
-    <tr>
-      <td>req/batch-request</td>
-      <td>
-        <ul>
-          <li>req/batch-request/batch-request</li>
-        </ul>
-      </td>
-      <td>Processing multiple requests with a single request</td>
-    </tr>
+#### Requirements class id: http://www.opengis.net/spec/iot_sensing/1.0/req/request-data
 
-    <tr>
-      <td>req/multi-datastream</td>
-      <td>
-        <ul>
-          <li>req/multi-datastream/properties</li>
-          <li>req/multi-datastream/relations</li>
-          <li>req/multi-datastream/constraints</li>
-        </ul>
-      </td>
-      <td>Handling complex observations with complex results, especially when the result is an array</td>
-    </tr>
+**Requirements:**
 
-    <tr>
-      <td>req/data-array</td>
-      <td>
-        <ul>
-          <li>req/data-array/data-array</li>
-        </ul>
-      </td>
-      <td>Serving Observations with the efficient data array encoding</td>
-    </tr>
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/order
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/expand
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/select
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/status-code
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/query-status-code
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/orderby
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/top
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/skip
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/count
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/filter
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/built-in-filter-operations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/built-in-filter-functions
+* http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/pagination
 
-    <tr>
-      <td>req/mqtt</td>
-      <td>
-        <ul>
-          <li>req/mqtt/create</li>
-          <li>req/mqtt/update</li>
-          <li>req/mqtt/receive-update</li>
-        </ul>
-      </td>
-      <td>Receiving updates, creating and updating entities through MQTT</td>
-    </tr>
-  </tbody>
-</table>
+**Description:**
+
+Requesting data with system query options
+
+#### Requirements class id: http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete
+
+**Requirements:**
+
+* http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/create-entity
+* http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/link-to-existing-entities
+* http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/deep-insert
+* http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/deep-insert-status-code
+* http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/update-entity
+* http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/delete-entity
+* http://www.opengis.net/spec/iot_sensing/1.0/req/historical-location-auto-creation
+
+**Description:**
+
+Creating, updating, and deleting entities
+
+#### Requirements class id: http://www.opengis.net/spec/iot_sensing/1.0/req/batch-request
+
+**Requirements:**
+
+* http://www.opengis.net/spec/iot_sensing/1.0/req/batch-request/batch-request
+
+**Description:**
+
+Processing multiple requests with a single request
+
+#### Requirements class id: http://www.opengis.net/spec/iot_sensing/1.0/req/multi-datastream
+
+**Requirements:**
+
+* http://www.opengis.net/spec/iot_sensing/1.0/req/multi-datastream/properties
+* http://www.opengis.net/spec/iot_sensing/1.0/req/multi-datastream/relations
+* http://www.opengis.net/spec/iot_sensing/1.0/req/multi-datastream/constraints
+
+**Description:**
+
+Handling complex observations with complex results, especially when the result is an array
+
+#### Requirements class id: http://www.opengis.net/spec/iot_sensing/1.0/req/data-array
+
+**Requirements:**
+
+* http://www.opengis.net/spec/iot_sensing/1.0/req/data-array/data-array
+
+**Description:**
+
+Serving Observations with the efficient data array encoding
+
+#### Requirements class id: http://www.opengis.net/spec/iot_sensing/1.0/req/mqtt
+
+**Requirements:**
+
+* http://www.opengis.net/spec/iot_sensing/1.0/req/mqtt/create
+* http://www.opengis.net/spec/iot_sensing/1.0/req/mqtt/update
+* http://www.opengis.net/spec/iot_sensing/1.0/req/mqtt/receive-update
+
+**Description:**
+
+Receiving updates, creating and updating entities through MQTT
 
 ## 3. Normative References
 
