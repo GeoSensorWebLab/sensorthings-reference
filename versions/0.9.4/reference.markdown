@@ -132,16 +132,16 @@ Receiving updates, creating and updating entities through MQTT
 
 The following normative documents contain provisions which, through reference in this text, constitute provisions of this document. For dated references, subsequent amendments to, or revisions of, any of these publications do not apply. For undated references, the latest edition of the normative document referred to applies.
 
-* [ISO 8601:1988(E), Data elements and interchange formats – Information interchange - Representation of dates and times.](http://www.iso.org/iso/catalogue_detail.htm?csnumber=15903)
-* [OGC and ISO 19156:2011(E), OGC Abstract Specification: Geographic information — Observations and Measurements](http://www.iso.org/iso/catalogue_detail.htm?csnumber=32574)
-* [OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html)
-* [OASIS OData Version 4.0 Part 2: URL Conventions Plus Errata 02](http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html)
-* [OASIS OData JSON Format Version 4.0 Plus Errata 02](http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html)
-* [OASIS OData ABNF Construction Rules Errata 02](http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/abnf/odata-abnf-construction-rules.txt)
-* [RFC 2046, Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types](https://www.ietf.org/rfc/rfc2046.txt)
-* [RFC 2616, Hypertext Transfer Protocol -- HTTP/1.1](https://www.ietf.org/rfc/rfc2616.txt)
-* [RFC 4627, the application/json Media Type for Javascript Object Notation (JSON), July 2006](https://www.ietf.org/rfc/rfc4627.txt)
-* [Unified Code for Units of Measure (UCUM) – Version 1.9, April 2015](http://unitsofmeasure.org/ucum.html)
+* [ISO 8601:1988(E), Data elements and interchange formats – Information interchange - Representation of dates and times.][ISO 8601:1988(E)]
+* [OGC and ISO 19156:2011(E), OGC Abstract Specification: Geographic information — Observations and Measurements][OGC and ISO 19156:2011(E)]
+* [OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02][OData Protocol]
+* [OASIS OData Version 4.0 Part 2: URL Conventions Plus Errata 02][OData URL Conventions]
+* [OASIS OData JSON Format Version 4.0 Plus Errata 02][OData JSON Format]
+* [OASIS OData ABNF Construction Rules Errata 02][OData ABNF]
+* [RFC 2046, Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types][RFC 2046]
+* [RFC 2616, Hypertext Transfer Protocol -- HTTP/1.1][RFC 2616]
+* [RFC 4627, the application/json Media Type for Javascript Object Notation (JSON), July 2006][RFC 4627]
+* [Unified Code for Units of Measure (UCUM) – Version 1.9, April 2015][UCUM]
 
 ## 4. Terms and definitions
 
@@ -149,37 +149,37 @@ For the purposes of this document, the following terms and definitions apply:
 
 **Collection**
 
-Sets of Resources, which can be retrieved in whole or in part [RFC5023]
+Sets of Resources, which can be retrieved in whole or in part ([RFC 5023][RFC 5023])
 
 **Entity**
 
-Entities are instances of entity types [OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02]
+Entities are instances of entity types ([OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02][OData Protocol])
 
-*Note: Thing, Sensor, Datastream, Observation are some example entity types of the OGC SensorThings API*
+Note: `Thing`, `Sensor`, `Datastream`, `Observation` are some example entity types of the OGC SensorThings API
 
 **Entity sets**
 
-Entity sets are named collections of entities (e.g. Sensors is an entity set containing Sensor entities). An entity's key uniquely identifies the entity within an entity set. Entity sets provide entry points into an OGC SensorThings API service. [OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02]
+Entity sets are named collections of entities (e.g. `Sensors` is an entity set containing `Sensor` entities). An entity's key uniquely identifies the entity within an entity set. Entity sets provide entry points into an OGC SensorThings API service. ([OASIS OData Version 4.0 Part 1: Protocol Plus Errata 02][OData Protocol])
 
 **(Internet of) Thing**
 
-A thing is an object of the physical world (physical things) or the information world (virtual things) that is capable of being identified and integrated into communication networks. [ITU-T Y.2060]
+A thing is an object of the physical world (physical things) or the information world (virtual things) that is capable of being identified and integrated into communication networks. ([ITU-T Y.2060][ITU-T Y.2060])
 
 **Measurement**
 
-A set of operations having the object of determining the value of a quantity [OGC and ISO 19156:2011]
+A set of operations having the object of determining the value of a quantity ([OGC and ISO 19156:2011][OGC and ISO 19156:2011(E)])
 
 **Observation**
 
-Act of measuring or otherwise determining the value of a property [OGC and ISO 19156:2011]
+Act of measuring or otherwise determining the value of a property ([OGC and ISO 19156:2011][OGC and ISO 19156:2011(E)])
 
 **Observation Result**
 
-Estimate of the value of a property determined through a known observation procedure [OGC and ISO 19156:2011]
+Estimate of the value of a property determined through a known observation procedure ([OGC and ISO 19156:2011][OGC and ISO 19156:2011(E)])
 
 **Resources**
 
-A network-accessible data object or service identified by an IRI, as defined in [RFC 2616]
+A network-accessible data object or service identified by an IRI, as defined in ([RFC 2616][RFC 2616])
 
 **REST**
 
@@ -187,7 +187,7 @@ The Representational State Transfer (REST) style is an abstraction of the archit
 
 **Sensor**
 
-An entity capable of observing a phenomenon and returning an observed value. Type of observation procedure that provides the estimated value of an observed property at its output. [OGC 12-000]
+An entity capable of observing a phenomenon and returning an observed value. Type of observation procedure that provides the estimated value of an observed property at its output. ([OGC 12-000][OGC 12-000])
 
 ## 5. Conventions
 
@@ -262,7 +262,7 @@ As a standardized data model and interface for sensors in the WoT and IoT<sup id
 
 The OGC SensorThings API data model consists of two parts: (1) the Sensing profile and (2) the Tasking profile. The Sensing profile allows IoT devices and applications to CREATE, READ, UPDATE, and DELETE (i.e., HTTP `POST`, `GET`, `PATCH`, and `DELETE`) IoT data and metadata in a SensorThings service.
 
-Managing and retrieving observations and metadata from IoT sensor systems is one of the most common use cases. As a result, the Sensing profile is designed based on the ISO/OGC Observation and Measurement (O&M) model [OGC and ISO 19156:2011].
+Managing and retrieving observations and metadata from IoT sensor systems is one of the most common use cases. As a result, the Sensing profile is designed based on the ISO/OGC Observation and Measurement (O&M) model ([OGC and ISO 19156:2011][OGC and ISO 19156:2011(E)]).
 
 The key to the model is that an `Observation` is modeled as an act that produces a result whose value is an estimate of a property of the observation target or `FeatureOfInterest`. An `Observation` instance is classified by its event time (e.g., `resultTime` and `phenonmenonTime`), `FeatureOfInterest`, `ObservedProperty`, and the procedure used (often a `Sensor`).
 
@@ -281,7 +281,7 @@ When annotating a name/value pair for which the value is represented as a JSON o
 
 When annotating a name/value pair for which the value is represented as a JSON array or primitive value, each annotation that applies to this name/value pair is placed next to the annotated name/value pair and represented as a single name/value pair. The name is the same as the name of the name/value pair being annotated, followed by the “at” sign (`@`), followed by the namespace `iot`, followed by a dot (.), followed by the name of the term. (e.g., "`Locations@iot.navigationLink`":"`http://example.org/v.1.0/Things(1)/Locations`")
 
-[Adapted from OData 4.0-JSON-Format section 18]
+([Adapted from OData 4.0-JSON-Format section 18][OData JSON Format])
 
 #### Table 8-1 Common control information
 
@@ -330,7 +330,7 @@ In this section, we explain the properties in each entity type and the direct re
 
 ### 8.3.1 `Thing`
 
-The OGC SensorThings API follows the ITU-T definition, *i.e.*, with regard to the Internet of Things, a thing is an object of the physical world (physical things) or the information world (virtual things) that is capable of being identified and integrated into communication networks [ITU-T Y.2060].
+The OGC SensorThings API follows the ITU-T definition, *i.e.*, with regard to the Internet of Things, a thing is an object of the physical world (physical things) or the information world (virtual things) that is capable of being identified and integrated into communication networks ([ITU-T Y.2060][ITU-T Y.2060]).
 
     Req 2   Each Thing entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-2.
     http://www.opengis.net/spec/iot_sensing/1.0/req/core/thing-properties
@@ -437,7 +437,7 @@ defined as the last known location of the `Thing`.
 
 A `Thing`’s `Location` may be identical to the `Thing`’s `Observations’` `FeatureOfInterest`. In the context of the IoT, the principle location of interest is usually associated with the location of the `Thing`, especially for in-situ sensing applications. For example, the location of interest of a wifi-connected thermostat should be the building or the room in which the smart thermostat is located. And the `FeatureOfInterest` of the `Observations` made by the thermostat (e.g., room temperature readings) should also be the building or the room. In this case, the content of the smart thermostat’s location should be the same as the content of the temperature readings’ feature of interest.
 
-However, the ultimate location of interest of a `Thing` is not always the location of the `Thing` (e.g., in the case of remote sensing). In those use cases, the content of a `Thing`’s `Location` is different from the content of the `FeatureOfInterest` of the `Thing`’s `Observations`. Section 7.1.4 of [OGC and ISO 19156:2011] provides a detailed explanation of observation location.
+However, the ultimate location of interest of a `Thing` is not always the location of the `Thing` (e.g., in the case of remote sensing). In those use cases, the content of a `Thing`’s `Location` is different from the content of the `FeatureOfInterest` of the `Thing`’s `Observations`. Section 7.1.4 of [OGC and ISO 19156:2011][OGC and ISO 19156:2011(E)] provides a detailed explanation of observation location.
 
     Req 4    Each Location entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-4.
     http://www.opengis.net/spec/iot_sensing/1.0/req/core/location-properties
@@ -835,7 +835,7 @@ same `ObservedProperty` and are produced by the same `Sensor`.
 }
 ```
 
-The `observationType` defines the result types for specialized observations [OGC and ISO 19156:2011 Table 3]. The following table shows some of the `valueCodes` that maps the UML classes in O&M v2.0 [OGC and ISO 19156:2011] to `observationType` names and `observation` result types.
+The `observationType` defines the result types for specialized observations [OGC and ISO 19156:2011 Table 3]. The following table shows some of the `valueCodes` that maps the UML classes in O&M v2.0 ([OGC and ISO 19156:2011][OGC and ISO 19156:2011(E)]) to `observationType` names and `observation` result types.
 
 #### Table 8-11 List of some code values used for identifying types defined in the O&M conceptual model (OGC and ISO 19156:2011)
 
@@ -1097,8 +1097,8 @@ An `ObservedProperty` specifies the phenomenon of an `Observation`.
 
 ### 8.3.7 `Observation`
 
-An `Observation` is act of measuring or otherwise determining the value of a property [OGC and ISO
-19156:2011]
+An `Observation` is act of measuring or otherwise determining the value of a property ([OGC and ISO
+19156:2011][OGC and ISO 19156:2011(E)])
 
     Req 12    Each Observation entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-17.
     http://www.opengis.net/spec/iot_sensing/1.0/req/core/observation-properties
@@ -1243,7 +1243,7 @@ The following example shows an `Observation` whose `Datastream` has an `Observat
 
 ### 8.3.8 `FeatureOfInterest`
 
-An `Observation` results in a value being assigned to a phenomenon. The phenomenon is a property of a feature, the latter being the `FeatureOfInterest` of the `Observation` [OGC and ISO 19156:2001]. In the context of the Internet of Things, many `Observations`’ `FeatureOfInterest` can be the `Location` of the `Thing`. For example, the `FeatureOfInterest` of a wifi-connect thermostat can be the `Location` of the thermostat (i.e., the living room where the thermostat is located in). In the case of remote sensing, the `FeatureOfInterest` can be the geographical area or volume that is being sensed.
+An `Observation` results in a value being assigned to a phenomenon. The phenomenon is a property of a feature, the latter being the `FeatureOfInterest` of the `Observation` ([OGC and ISO 19156:2011][OGC and ISO 19156:2011(E)]). In the context of the Internet of Things, many `Observations`’ `FeatureOfInterest` can be the `Location` of the `Thing`. For example, the `FeatureOfInterest` of a wifi-connect thermostat can be the `Location` of the thermostat (i.e., the living room where the thermostat is located in). In the case of remote sensing, the `FeatureOfInterest` can be the geographical area or volume that is being sensed.
 
     Req 14    Each FeatureOfInterest entity SHALL have the mandatory properties and MAY have the optional properties listed in Table 8-19.
     http://www.opengis.net/spec/iot_sensing/1.0/req/core/feature-of-interest-properties
@@ -1376,7 +1376,7 @@ The resource path comes right after the service root URI and can be used to addr
 
 Each element SHALL be a JSON object with at least two name/value pairs, one with name name containing the name of the entity set (e.g., `Things`, `Locations`, `Datastreams`, `Observations`, `ObservedProperties` and `Sensors`) and one with name `url` containing the URL of the entity set, which may be an absolute or a relative URL.
 
-[Adapted from OData 4.0-JSON-Format section 5]
+([Adapted from OData 4.0-JSON-Format section 5][OData JSON Format])
 
 #### Example 10 a SensorThings request with no resource path
 
@@ -1431,7 +1431,7 @@ The `count` annotation represents the number of entities in the collection. If p
 
 When there is service-driven pagination imposed, the `nextLink` annotation is included in a response that represents a partial result.
 
-[Adapted from OData 4.0-JSON-Format section 12]
+([Adapted from OData 4.0-JSON-Format section 12][OData JSON Format])
 
 #### Example 11 an example to address an entity set
 
@@ -1483,7 +1483,7 @@ Users can address to a property of an entity by specifying the property name aft
 
 If the property is single-valued and has the `null` value, the service SHALL respond with `204 No Content`. If the property is not available, for example due to permissions, the service SHALL respond with `404 Not Found`.
 
-[Adapted from OData 4.0-Protocol 11.2.3]
+([Adapted from OData 4.0-Protocol 11.2.3][OData Protocol])
 
 **URI Pattern:** `SERVICE_ROOT_URI/RESOURCE_PATH_TO_AN_ENTITY/PROPERTY_NAME`
 
@@ -1627,7 +1627,7 @@ The `$expand` system query option indicates the related entities to be represent
 
 Query options can be applied to the expanded navigation property by appending a semicolon-separated list of query options, enclosed in parentheses, to the navigation property name. Allowed system query options are `$filter`, `$select`, `$orderby`, `$skip`, `$top`, `$count`, and `$expand`.
 
-[Adapted from OData 4.0- URL 5.1.2]
+([Adapted from OData 4.0- URL 5.1.2][OData URL Conventions])
 
 **Example 4:** `http://example.org/v1.0/Datastreams(1)?$expand=Observations($filter=result eq 1)` returns the `Datastream` whose `id` is 1 as well as its `Observations` with a `result` equal to 1.
 
@@ -1638,7 +1638,7 @@ Query options can be applied to the expanded navigation property by appending a 
 
 The `$select` system query option requests that the service to return only the properties explicitly requested by the client. The value of a `$select` query option is a comma-separated list of selection clauses. Each selection clause may be a property name (including navigation property names). The service returns the specified content, if available, along with any available expanded navigation properties.
 
-[Adapted from OData 4.0-Protocol 11.2.4.1]
+([Adapted from OData 4.0-Protocol 11.2.4.1][OData Protocol])
 
 #### Example 19: examples of `$select` query option
 
@@ -1671,7 +1671,7 @@ Null values come before non-null values when sorting in ascending order and afte
 
 Items are sorted by the result values of the first expression, and then items with the same value for the first expression are sorted by the result value of the second expression, and so on.
 
-[Note: Adapted from OData 4.0-Protocol 11.2.5.2]
+([Note: Adapted from OData 4.0-Protocol 11.2.5.2][OData Protocol])
 
 #### Example 20: examples of `$orderby` query option
 
@@ -1689,7 +1689,7 @@ The `$top` system query option specifies a non-negative integer n that limits th
 
 If no unique ordering is imposed through an `$orderby` query option, the service imposes a stable ordering across requests that include `$top`.
 
-[Note: Adapted from OData 4.0-Protocol 11.2.5.3]
+([Note: Adapted from OData 4.0-Protocol 11.2.5.3][OData Protocol])
 
 In addition, if the `$top` value exceeds the service-driven pagination limitation (*i.e.*, the largest number of entities the service can return in a single response), the `$top` query option is discarded and the server-side pagination limitation is imposed.
 
@@ -1717,7 +1717,7 @@ Where `$top` and `$skip` are used together, `$skip` is applied before `$top`, re
 If no unique ordering is imposed through an `$orderby` query option, the service imposes a stable ordering
 across requests that include `$skip`.
 
-[Note: Adapted from OData 4.0-Protocol 11.2.5.4]
+([Note: Adapted from OData 4.0-Protocol 11.2.5.4][OData Protocol])
 
 **Example 2:** `http://example.org/v1.0/Observations?$skip=2&$top=2&$orderby=resultTime` returns the third and fourth `Observation` entities from the collection of all `Observation` entities when the collection is sorted by the `resultTime` property in ascending order.
 
@@ -1735,7 +1735,7 @@ specified.
 
 The `$count` system query option ignores any `$top`, `$skip`, or `$expand` query options, and returns the total count of results across all pages including only those results matching any specified `$filter`. Clients should be aware that the count returned inline may not exactly equal the actual number of items returned, due to latency between calculating the count and enumerating the last value or due to inexact calculations on the service.
 
-[Adapted from OData 4.0-Protocol 11.2.5.5]
+([Adapted from OData 4.0-Protocol 11.2.5.5][OData Protocol])
 
 #### Example 23: examples of `$count` query option
 
@@ -1760,7 +1760,7 @@ number of `Things` in the collection.
 
 The `$filter` system query option allows clients to filter a collection of entities that are addressed by a request URL. The expression specified with `$filter` is evaluated for each entity in the collection, and only items where the expression evaluates to true are included in the response. Entities for which the expression evaluates to false or to null, or which reference properties that are unavailable due to permissions, are omitted from the response.
 
-[Adapted from Data 4.0-URL Conventions 5.1.1]
+([Adapted from Data 4.0-URL Conventions 5.1.1][OData URL Conventions])
 
 The expression language that is used in `$filter` operators supports references to properties and literals. The literal values can be strings enclosed in single quotes, numbers and boolean values (true or false) or datetime values represented as ISO 8601 time string.
 
@@ -1780,7 +1780,7 @@ In addition, clients can choose to use the properties of linked entities in the 
 
 ##### 9.4.5.1 Built-in filter operations
 
-The OGC SensorThings API supports a set of built-in filter operations, as described in the following table. These built-in filter operator usages and definitions follow the [OData Specification Section 11.2.5.1.1] and [OData Version 4.0 ABNF].
+The OGC SensorThings API supports a set of built-in filter operations, as described in the following table. These built-in filter operator usages and definitions follow the [OData Specification Section 11.2.5.1.1][OData Protocol] and [OData Version 4.0 ABNF][OData ABNF].
 
     Req 27    The built-in filter operators SHALL be as defined in Table 9-1.
     http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/built-in-filter-operations
@@ -1888,9 +1888,9 @@ The OGC SensorThings API supports a set of built-in filter operations, as descri
 
 ##### 9.4.5.2 Built-in query functions
 
-The OGC SensorThings API supports a set of functions that can be used with the `$filter` or `$orderby` query operations. The following table lists the available functions and they follows the OData Canonical function definitions listed in Section 5.1.1.4 of the [OData Version 4.0 Part 2: URL Conventions] and the syntax rules for these functions are defined in [OData Version 4.0 ABNF].
+The OGC SensorThings API supports a set of functions that can be used with the `$filter` or `$orderby` query operations. The following table lists the available functions and they follows the OData Canonical function definitions listed in Section 5.1.1.4 of the [OData Version 4.0 Part 2: URL Conventions][OData URL Conventions] and the syntax rules for these functions are defined in [OData Version 4.0 ABNF][OData ABNF].
 
-In order to support spatial relationship functions, SensorThings API defines nine additional geospatial functions based on the spatial relationship between two geometry objects. The spatial relationship functions are defined in the OGC Simple Feature Access specification [OGC 06-104r4 part 1, clause 6.1.2.3]. The names of these nine functions start with a prefix "st_" following the OGC Simple Feature Access specification [OGC 06-104r4]. In addition, the Well-Known Text (WKT) format is the default input geometry for these nine functions.
+In order to support spatial relationship functions, SensorThings API defines nine additional geospatial functions based on the spatial relationship between two geometry objects. The spatial relationship functions are defined in the OGC Simple Feature Access specification [OGC 06-104r4 part 1, clause 6.1.2.3][OGC 06-104r4 part 1]. The names of these nine functions start with a prefix "st_" following the OGC Simple Feature Access specification [OGC 06-104r4]. In addition, the Well-Known Text (WKT) format is the default input geometry for these nine functions.
 
     Req 28    The built-in query functions SHALL be as defined in Table 9-2.
     http://www.opengis.net/spec/iot_sensing/1.0/req/request-data/built-in-query-functions
@@ -2238,7 +2238,7 @@ The `nextLink` annotation indicates that a response is only a subset of the requ
 
 SensorThings clients SHALL treat the URL of the `nextLink` as opaque, and SHALL NOT append system query options to the URL of a next link. Services may not allow a change of format on requests for subsequent pages using the next link.
 
-[Adapted from OData 4.0-Protocol 11.2.5.7]
+[Adapted from OData 4.0-Protocol 11.2.5.7][OData Protocol]
 
 **Example 25:** `http://example.org/v1.0/Things` returns a subset of the `Thing` entities of requested
 collection of `Things`. The `nextLink` contains a link allowing retrieving the next partial set of items.
@@ -2393,7 +2393,7 @@ As many IoT devices are resource-constrained, the SensorThings API adopts the ef
 
     On success, the service SHALL create all entities and relate them. On failure, the service SHALL NOT create any of the entities.
 
-    [Adapted from Data 4.0-Protocol 11.4.2.2]
+    ([Adapted from Data 4.0-Protocol 11.4.2.2][OData Protocol])
 
     http://www.opengis.net/spec/iot_sensing/1.0/req/create-update-delete/deep-insert
 
@@ -2551,7 +2551,7 @@ Upon successfully retrieve resources, the service responds with `200 OK`. Regard
 
 In SensorThings `PATCH` is the preferred means of updating an entity. `PATCH` provides more resiliency between clients and services by directly modifying only those values specified by the client.
 
-The semantics of `PATCH`, as defined in [RFC5789], is to merge the content in the request payload with the entity’s current state, applying the update only to those components specified in the request body. The properties provided in the payload corresponding to updatable properties SHALL replace the value of the corresponding property in the entity. Missing properties of the containing entity or complex property SHALL NOT be directly altered.
+The semantics of `PATCH`, as defined in [RFC 5789][RFC 5789], is to merge the content in the request payload with the entity’s current state, applying the update only to those components specified in the request body. The properties provided in the payload corresponding to updatable properties SHALL replace the value of the corresponding property in the entity. Missing properties of the containing entity or complex property SHALL NOT be directly altered.
 
 Services MAY additionally support `PUT`, but should be aware of the potential for data-loss in round-tripping properties that the client may not know about in advance, such as open or added properties, or properties not specified in metadata. Services that support `PUT` SHALL replace all values of structural properties with those specified in the request body. Omitting a non-nullable property with no service-generated or default value from a `PUT` request results in a `400 Bad Request` error.
 
@@ -2563,7 +2563,7 @@ The entity SHALL NOT contain related entities as inline content. It MAY contain 
 
 On success, the response SHALL be a valid success response.
 
-[Adapted from OData 4.0-Protocol 11.4.3]
+([Adapted from OData 4.0-Protocol 11.4.3][OData Protocol])
 
 **HTTP Method:** `PATCH` or `PUT`
 
@@ -2664,11 +2664,11 @@ Services MAY implicitly delete or modify related entities if required by integri
 
 ### 11.1 Introduction
 
-The SensorThings service interface provides interfaces for users to perform CRUD actions on resources through different HTTP methods. However, as many IoT devices are resource-constrained, handling a large number of communications may not be practical. This section describes how a SensorThings service can support executing multiple operations sent in a single HTTP request through the use of batch processing. This section covers both how batch operations are represented and processed. SensorThings batch request extension is adapted from [OData 4.0 Protocol 11.7] and all subsections. The only difference is that the `OData-Version` header SHOULD be omitted in SensorThings. Readers are encouraged to read the OData specification section 11.7 before reading the examples below.
+The SensorThings service interface provides interfaces for users to perform CRUD actions on resources through different HTTP methods. However, as many IoT devices are resource-constrained, handling a large number of communications may not be practical. This section describes how a SensorThings service can support executing multiple operations sent in a single HTTP request through the use of batch processing. This section covers both how batch operations are represented and processed. SensorThings batch request extension is adapted from [OData 4.0 Protocol 11.7][OData Protocol] and all subsections. The only difference is that the `OData-Version` header SHOULD be omitted in SensorThings. Readers are encouraged to read the OData specification section 11.7 before reading the examples below.
 
 ### 11.2 Batch-processing request
 
-A batch request is represented as a Multipart MIME v1.0 message [RFC2046], a standard format allowing the representation of multiple parts, each of which may have a different content type, within a single request.
+A batch request is represented as a Multipart MIME v1.0 message ([RFC 2046][RFC 2046]), a standard format allowing the representation of multiple parts, each of which may have a different content type, within a single request.
 
 The example below shows a GUID as a boundary and `example.org/v1.0/` for the URI of the service.
 
@@ -2701,9 +2701,9 @@ The following example shows a Batch Request that contains the following operatio
 
 Note: For brevity, in the example, request bodies are excluded in favor of English descriptions inside <> brackets.
 
-Note also that the two empty lines after the Host header of the `GET` request are necessary: the first is part of the `GET` request header; the second is the empty body of the `GET` request, followed by a CRLF according to [RFC2046].
+Note also that the two empty lines after the Host header of the `GET` request are necessary: the first is part of the `GET` request header; the second is the empty body of the `GET` request, followed by a CRLF according to ([RFC 2046][RFC 2046]).
 
-[Adapted from OData 4.0 Protocol 11.7.2]
+([Adapted from OData 4.0 Protocol 11.7.2][OData Protocol])
 
 #### Example 31-2: a Batch Request body example
 
@@ -2926,7 +2926,7 @@ Client makes a second request using the returned monitor URL:
 
 ## 12. SensorThings `MultiDatastream` extension
 
-Observation results may have many data types, including primitive types like category or measure, but also more complex types such as time, location and geometry [OGC and ISO 19156:2008]. SensorThings’ `MultiDatastream` entity is an extension to handle complex observations when the result is an array.
+Observation results may have many data types, including primitive types like category or measure, but also more complex types such as time, location and geometry ([OGC and ISO 19156:2008][OGC and ISO 19156:2011(E)]). SensorThings’ `MultiDatastream` entity is an extension to handle complex observations when the result is an array.
 
 A `MultiDatastream` groups a collection of `Observations` and the `Observations` in a `MultiDatastream` have a complex result type.
 
@@ -3983,3 +3983,18 @@ OGC 12-000, OGC® SensorML: Model and XML Encoding Standard. Available Online: h
 
 RFC 5023, The Atom Publishing Protocol. Available Online: https://www.ietf.org/rfc/rfc5023.txt
 
+[ISO 8601:1988(E)]: http://www.iso.org/iso/catalogue_detail.htm?csnumber=15903
+[OGC and ISO 19156:2011(E)]: http://www.iso.org/iso/catalogue_detail.htm?csnumber=32574
+[OData Protocol]: http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part1-protocol.html
+[OData URL Conventions]: http://docs.oasis-open.org/odata/odata/v4.0/odata-v4.0-part2-url-conventions.html
+[OData JSON Format]: http://docs.oasis-open.org/odata/odata-json-format/v4.0/os/odata-json-format-v4.0-os.html
+[OData ABNF]: http://docs.oasis-open.org/odata/odata/v4.0/errata02/os/complete/abnf/odata-abnf-construction-rules.txt
+[RFC 2046]: https://www.ietf.org/rfc/rfc2046.txt
+[RFC 2616]: https://www.ietf.org/rfc/rfc2616.txt
+[RFC 4627]: https://www.ietf.org/rfc/rfc4627.txt
+[RFC 5023]: https://www.ietf.org/rfc/rfc5023.txt
+[RFC 5789]: https://www.ietf.org/rfc/rfc5789.txt
+[UCUM]: http://unitsofmeasure.org/ucum.html
+[ITU-T Y.2060]: https://www.itu.int/rec/T-REC-Y.2060-201206-I
+[OGC 12-000]: http://www.opengeospatial.org/standards/sensorml
+[OGC 06-104r4 part 1]: http://www.opengeospatial.org/standards/sfa
